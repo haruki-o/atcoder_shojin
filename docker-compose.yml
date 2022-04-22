@@ -1,0 +1,32 @@
+version: '3'
+services:
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+    ports:
+      - '3306:3306'
+    command: --default-authentication-plugin=mysql_native_password
+  backend:
+    build: ./backend
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 8080 -b '0.0.0.0'"
+    volumes:
+      - ./backend:/myapp
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    stdin_open: true
+    tty: true
+    command: sleep infinity
+  frontend:
+    build: ./frontend
+    ports:
+      - '3000:3000'
+    working_dir: /myapp
+    volumes:
+      - ./frontend/myapp:/myapp
+      - /myapp/node_modules
+    tty: true
+    environment:
+      - CHOKIDAR_USEPOLLING=true
