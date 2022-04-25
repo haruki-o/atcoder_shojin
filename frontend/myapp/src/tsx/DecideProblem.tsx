@@ -7,41 +7,38 @@ import { Problem } from "../interface/index"
 import { getEstimatedDifficulties } from "../api/atcoderProblems"
 
 interface ProblemsProps {
-  problems: Problem[]
-  setProblems: Function
+  contestProblems: Problem[]
+  setContestProblems: Function
+  allProblems: Problem[]
 }
 
 const Diff: string[] = ["grey", "brawn", "green", "lightBlue", "blue", "yellow", "orange", "red"]
 const downDiff: number[] = [0, 400, 800, 1200, 1600, 2000, 2400, 2800]
 const upDiff: number[] = [400, 800, 1200, 1600, 2000, 2400, 2800, 5000]
 
-export const DecideProblem: React.FC<ProblemsProps> = ({problems, setProblems}) => {
-  const displayProblem = async (id: number) => {
-    try {
-      const res: any = await getEstimatedDifficulties()
-      console.log(res.data);
-      
-      if(res.status === 200){
-        console.log("create success!")
-        for(const key of Object.keys(res.data)){
-          if(downDiff[id] <= res.data[key].difficulty && res.data[key].difficulty <= upDiff){
-            console.log(res.data[key].difficulty)
-          }
-        }
+export const DecideProblem: React.FC<ProblemsProps> = ({contestProblems, setContestProblems, allProblems }) => {
+
+  const gachaProblem = (id: number) => {
+    console.log(Diff[id])
+    const problemIndex: Problem[] = []
+    allProblems.forEach((value, key) => {
+      console.log(value)
+      if(downDiff[id] <= value.difficulty && value.difficulty <= upDiff[id]){
+        problemIndex.push(value);
       }
-    }
-    catch (err) {
-      console.log(err)
-    }
+    })
+    const addProblem: Problem = problemIndex[Math.floor(Math.random() * problemIndex.length)]
+    setContestProblems([...contestProblems, addProblem])
+    console.log(problemIndex)
   }
+
   return (
     <div>
       {
         Diff.map((value: string, index: number) => {
           return (
             <button 
-              style={{listStyle : 'none'}}
-              onClick = {() => {displayProblem(index)}}
+              onClick = {() => {gachaProblem(index)}}
             >
               {value}
             </button>

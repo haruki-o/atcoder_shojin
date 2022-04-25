@@ -6,12 +6,8 @@ export interface Contest {
 }
 
 export interface Problem {
-  //abc
+  //abc013
   contest_id: string
-  //Ignore Operations
-  title: string
-  //A
-  problem_index: string
   //1257
   difficulty: number
 }
