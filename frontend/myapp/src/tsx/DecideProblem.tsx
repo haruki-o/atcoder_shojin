@@ -17,19 +17,17 @@ const downDiff: number[] = [0, 400, 800, 1200, 1600, 2000, 2400, 2800]
 const upDiff: number[] = [400, 800, 1200, 1600, 2000, 2400, 2800, 5000]
 
 export const DecideProblem: React.FC<ProblemsProps> = ({contestProblems, setContestProblems, allProblems }) => {
-
+  console.log("render test")
   const gachaProblem = (id: number) => {
     console.log(Diff[id])
     const problemIndex: Problem[] = []
     allProblems.forEach((value, key) => {
-      console.log(value)
       if(downDiff[id] <= value.difficulty && value.difficulty <= upDiff[id]){
         problemIndex.push(value);
       }
     })
     const addProblem: Problem = problemIndex[Math.floor(Math.random() * problemIndex.length)]
-    setContestProblems([...contestProblems, addProblem])
-    console.log(problemIndex)
+    setContestProblems((prev: Problem[]) => ([...contestProblems, addProblem]))
   }
 
   return (

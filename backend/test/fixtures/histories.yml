@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  constest_name: MyString
+  time: 1
+  date: 2022-04-26
+  user_name: MyString
+  user_rating: MyString
+  integer: MyString
+
+two:
+  constest_name: MyString
+  time: 1
+  date: 2022-04-26
+  user_name: MyString
+  user_rating: MyString
+  integer: MyString

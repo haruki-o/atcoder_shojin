@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_04_19_072630) do
+ActiveRecord::Schema.define(version: 2022_04_26_040858) do
 
   create_table "contests", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "contest_name"
@@ -19,6 +19,28 @@ ActiveRecord::Schema.define(version: 2022_04_19_072630) do
     t.integer "perf_system"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "time"
+  end
+
+  create_table "histories", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "constest_name"
+    t.integer "time"
+    t.date "date"
+    t.string "user_name"
+    t.string "user_rating"
+    t.string "integer"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "problemA"
+    t.string "problemB"
+    t.string "problemC"
+    t.string "problemD"
+    t.string "problemE"
+    t.string "problemF"
+    t.string "problemG"
+    t.string "problemH"
+    t.string "problemI"
+    t.string "problemJ"
   end
 
 end
