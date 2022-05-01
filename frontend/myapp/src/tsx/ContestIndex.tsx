@@ -8,11 +8,10 @@ interface ContestsProps {
   Contests: Contest[]
 }
 
-export const ContestsIndex: React.FC<ContestsProps> = ({Contests}) => {
+export const ContestIndex: React.FC = () => {
   return (
     <div>
-      <h1>a</h1>
-      <h2>{Contests[0].contest_name}</h2>
+      ContestIndex
     </div>
   )
 }

@@ -3,12 +3,13 @@ import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 
 import { Contest } from "../interface/index"
 import { Problem } from "../interface/index"
+import { HoldContestInfo } from '../interface/index';
 
 import { getEstimatedDifficulties } from "../api/atcoderProblems"
 
 interface ProblemsProps {
-  contestProblems: Problem[]
-  setContestProblems: Function
+  holdContestInfo: HoldContestInfo
+  setHoldContestInfo: Function
   allProblems: Problem[]
 }
 
@@ -16,7 +17,7 @@ const Diff: string[] = ["grey", "brawn", "green", "lightBlue", "blue", "yellow",
 const downDiff: number[] = [0, 400, 800, 1200, 1600, 2000, 2400, 2800]
 const upDiff: number[] = [400, 800, 1200, 1600, 2000, 2400, 2800, 5000]
 
-export const DecideProblem: React.FC<ProblemsProps> = ({contestProblems, setContestProblems, allProblems }) => {
+export const DecideProblem: React.FC<ProblemsProps> = ({holdContestInfo, setHoldContestInfo, allProblems }) => {
   console.log("render test")
   const gachaProblem = (id: number) => {
     console.log(Diff[id])
@@ -27,7 +28,10 @@ export const DecideProblem: React.FC<ProblemsProps> = ({contestProblems, setCont
       }
     })
     const addProblem: Problem = problemIndex[Math.floor(Math.random() * problemIndex.length)]
-    setContestProblems((prev: Problem[]) => ([...contestProblems, addProblem]))
+    setHoldContestInfo((prev: HoldContestInfo) => ({
+      contest_info: prev.contest_info,
+      problems: [...holdContestInfo.problems, addProblem]
+    }))
   }
 
   return (

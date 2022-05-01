@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 import { Contest } from "../interface/index"
@@ -11,45 +10,57 @@ import { getContests } from "../api/contests"
 import { getEstimatedDifficulties } from "../api/atcoderProblems"
 
 import { DecideProblem } from "./DecideProblem"
+import { DateForm } from './DateForm';
 
-interface HeldContestProps {
-  holdContest: HoldContestInfo
-  setHoldContest: Function
-}
-
-export const HeldContest:React.FC<HeldContestProps> = ({holdContest, setHoldContest}) => {
-  const [ contest, setContests] = useState<Contest>({ contest_name : "none" })
-  const [ contestProblems, setContestProblems ] = useState<Problem[]>([])
+export const HeldContest:React.FC = () => {
+  const [ holdContestInfo, setHoldContestInfo] = useState<HoldContestInfo>({
+    contest_info: {contest_name: 'none'},
+    problems: []
+  })
   const [ allProblems, setAllProblems ] = useState<Problem[]>([])
   const [ isDisplayMessage, setIsDisplayMessage ] = useState<boolean>(false)
   const navigate = useNavigate()
 
-
-  const handleHoldContest = async (propHoldContest: Contest) => {
+  const handleHoldContest = async () => {
     try {
       const res = await getContests();
       console.log(res.data);
-      var canNav: boolean = false;
       if(res.status === 200){
-        console.log("get consts all success!")
-        res.data.map((value: Contest) => {
-          if(value.contest_name === propHoldContest.contest_name){
-            console.log(`find same contest ${value.contest_name}`);
-            canNav = true;
-          }
-        })
-        if(isDisplayMessage)console.log("そんなコンテストは存在しません");
-        if(canNav){
-          setHoldContest({contest_info: contest, problems: contestProblems});
           navigate("/contest-page");
-        }
-        else setIsDisplayMessage(true);
       }
     }
     catch (err) {
       console.log(err);           
     }
   }
+
+  const checkHoldContest = async () => {
+    try {
+      const res = await getContests();
+      console.log(res.data);
+      if(res.status === 200){
+        console.log("get consts all success!")
+        var isSameContest: boolean = false;
+        res.data.map((value: Contest) => {
+          if(value.contest_name === holdContestInfo.contest_info.contest_name){
+            console.log(`find same contest ${value.contest_name}`);
+            isSameContest = true;
+          }
+        })
+        console.log(isSameContest)
+        if(!isSameContest || holdContestInfo.problems.length === 0){
+          if(!isSameContest)
+            setIsDisplayMessage(true);
+          else 
+            setIsDisplayMessage(false);
+        } else handleHoldContest();
+      }
+    }
+    catch (err) {
+      console.log(err);           
+    }
+  }
+  
 
   console.log("held render test")
 
@@ -86,16 +97,19 @@ export const HeldContest:React.FC<HeldContestProps> = ({holdContest, setHoldCont
         type="text"
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
           const { value }: { value : string } = e.target
-          setContests({contest_name: value})
+          setHoldContestInfo({
+            contest_info: {contest_name: value},
+            problems: holdContestInfo.problems
+          })
         }}
       />
       { isDisplayMessage ? '存在しません' : ''}
       <DecideProblem 
-        contestProblems={ contestProblems } setContestProblems={ setContestProblems } 
+        holdContestInfo={ holdContestInfo } setHoldContestInfo={ setHoldContestInfo } 
         allProblems = { allProblems } />
-      <ul>
+      <ul className='problemIndex'>
         {
-          contestProblems.map((problem: Problem, index: number) =>{
+          holdContestInfo.problems.map((problem: Problem, index: number) =>{
             const problemUrl: string = `https://atcoder.jp/contests/${problem.contest_id.substr(0,problem.contest_id.length-2)}/tasks/${problem.contest_id}`;
             return (
               <li>{problem.contest_id}, {problem.difficulty}<a href={problemUrl} target="_blank">url</a></li>
@@ -104,7 +118,7 @@ export const HeldContest:React.FC<HeldContestProps> = ({holdContest, setHoldCont
           })
         }
       </ul>
-      <button onClick={() => handleHoldContest(contest)}>held</button>
+      <button onClick={() => checkHoldContest()}>held</button>
     </div>
   )
 }
