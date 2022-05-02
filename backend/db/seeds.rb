@@ -20,3 +20,25 @@ Contest.create([
   }
 ]
 )
+
+History.create([
+  {
+    contest_name: 'test_contest',
+    time: '',
+    date: '',
+    user_name: '',
+    user_rating: '',
+    problemA: '';
+    problemB: ''
+  },
+  {
+    contest_name: '',
+    time: '',
+    date: '',
+    user_name: '',
+    user_rating: '',
+    problemA: '';
+    problemB: ''
+  }
+]
+)
