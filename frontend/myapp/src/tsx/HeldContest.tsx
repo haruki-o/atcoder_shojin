@@ -68,7 +68,7 @@ export const HeldContest:React.FC = () => {
     try {
       const res: any = await getEstimatedDifficulties()
       console.log(res.data);
-      
+      console.log(res);
       if(res.status === 200){
         console.log("get allProblem success!")
         for(const key of Object.keys(res.data)){
