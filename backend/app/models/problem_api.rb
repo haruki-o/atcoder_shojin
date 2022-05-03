@@ -1,0 +1,2 @@
+class ProblemApi < ApplicationRecord
+end

@@ -5,12 +5,11 @@ import { Contest } from "../interface/index"
 import { Problem } from "../interface/index"
 import { HoldContestInfo } from '../interface/index';
 
-import { getEstimatedDifficulties } from "../api/atcoderProblems"
 
 interface ProblemsProps {
   holdContestInfo: HoldContestInfo
   setHoldContestInfo: Function
-  allProblems: Problem[]
+  allProblems: Problem[] 
 }
 
 const Diff: string[] = ["grey", "brawn", "green", "lightBlue", "blue", "yellow", "orange", "red"]
@@ -18,7 +17,7 @@ const downDiff: number[] = [0, 400, 800, 1200, 1600, 2000, 2400, 2800]
 const upDiff: number[] = [400, 800, 1200, 1600, 2000, 2400, 2800, 5000]
 
 export const DecideProblem: React.FC<ProblemsProps> = ({holdContestInfo, setHoldContestInfo, allProblems }) => {
-  console.log("render test")
+  console.log("<DecideProblem>")
   const gachaProblem = (id: number) => {
     console.log(Diff[id])
     const problemIndex: Problem[] = []

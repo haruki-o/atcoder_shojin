@@ -5,19 +5,21 @@ import { Contest } from "../interface/index"
 import { Problem } from "../interface/index"
 import { HoldContestInfo } from '../interface/index';
 
-import { createContests } from "../api/contests"
-import { getContests } from "../api/contests"
-import { getEstimatedDifficulties } from "../api/atcoderProblems"
+import { getContests, createContests } from "../api/contests"
+import { getProblems } from "../api/apis"
 
 import { DecideProblem } from "./DecideProblem"
 import { DateForm } from './DateForm';
 
-export const HeldContest:React.FC = () => {
-  const [ holdContestInfo, setHoldContestInfo] = useState<HoldContestInfo>({
-    contest_info: {contest_name: 'none'},
-    problems: []
-  })
-  const [ allProblems, setAllProblems ] = useState<Problem[]>([])
+interface HeldContestProps {
+  holdContestInfo: HoldContestInfo
+  setHoldContestInfo: Function
+  allProblems: Problem[] 
+}
+
+export const HeldContest:React.FC<HeldContestProps> = ({
+  holdContestInfo, setHoldContestInfo,allProblems
+}) => {
   const [ isDisplayMessage, setIsDisplayMessage ] = useState<boolean>(false)
   const navigate = useNavigate()
 
@@ -26,7 +28,7 @@ export const HeldContest:React.FC = () => {
       const res = await getContests();
       console.log(res.data);
       if(res.status === 200){
-          navigate("/contest-page");
+          navigate("/contest_page");
       }
     }
     catch (err) {
@@ -62,33 +64,8 @@ export const HeldContest:React.FC = () => {
   }
   
 
-  console.log("held render test")
+  console.log("<HeldContest>")
 
-  const getAllProblems = async () => {
-    try {
-      const res: any = await getEstimatedDifficulties()
-      console.log(res.data);
-      console.log(res);
-      if(res.status === 200){
-        console.log("get allProblem success!")
-        for(const key of Object.keys(res.data)){
-          const diff: number = res.data[key].difficulty
-          const id: string = key
-          if(id == undefined || diff == undefined)continue;
-          const addProblem: Problem = {contest_id: id, difficulty: diff}
-          allProblems.push(addProblem)
-        }
-        console.log(allProblems)
-      }
-    }
-    catch (err) {
-      console.log(err)
-    }
-  }
-
-  useEffect(() => {
-   getAllProblems()
-  }, [])
 
   return (
     <div>

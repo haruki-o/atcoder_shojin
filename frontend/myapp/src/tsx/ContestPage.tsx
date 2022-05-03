@@ -7,21 +7,24 @@ import { HoldContestInfo } from '../interface/index';
 
 
 import { createContests } from "../api/contests"
-import { getProblems } from '../api/atcoderProblems';
 
 interface ContestPageProps {
-  holdContest: HoldContestInfo
+  holdContestInfo: HoldContestInfo
+  setHoldContestInfo: Function
+  allProblems: Problem[] 
 }
 
-export const ContestPage: React.FC<ContestPageProps> = ({holdContest}) => {
+export const ContestPage: React.FC<ContestPageProps> = ({
+  holdContestInfo, setHoldContestInfo, allProblems
+}) => {
   console.log("render <ContestPage>")
-  console.log(holdContest);
-  console.log(holdContest.problems)
+  console.log(holdContestInfo);
+  console.log(holdContestInfo.problems)
   return (
     <div>
       <ul>
       {
-        holdContest.problems.map((value: Problem, index: number) => {
+        holdContestInfo.problems.map((value: Problem, index: number) => {
           return(
             <li>{value.contest_id}</li> 
           )

@@ -4,7 +4,6 @@ class ContestsController < ApplicationController
   # GET /contests
   def index
     @contests = Contest.all
-    puts @contests
     render json: @contests
   end
 
