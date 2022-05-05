@@ -19,12 +19,7 @@ import { isConstructorDeclaration } from 'typescript';
 
 
 const App: React.FC = () => {
-  const [ holdContestInfo, setHoldContestInfo] = useState<HoldContestInfo>({
-    contest_info: {contest_name: 'none'},
-    problems: []
-  })
-  const [ allProblems, setAllProblems ] = useState<Problem[]>([])
-
+  const allProblems : Problem[] = []
   const getAllProblems = async () => {
     try {
       const res: any = await getProblems()
@@ -60,13 +55,9 @@ const App: React.FC = () => {
           <Route path="/" element={<Home />} />
           <Route path="/index" element={<ContestIndex />} />
           <Route path="/held" element={<HeldContest 
-            holdContestInfo = { holdContestInfo} 
-            setHoldContestInfo = { setHoldContestInfo } 
             allProblems = { allProblems} />} />
           <Route path="/create" element={<Create />} />
           <Route path="/contest_page" element={<ContestPage
-            holdContestInfo = { holdContestInfo} 
-            setHoldContestInfo = { setHoldContestInfo } 
             allProblems = { allProblems} />} />
         </Routes>
       </BrowserRouter>

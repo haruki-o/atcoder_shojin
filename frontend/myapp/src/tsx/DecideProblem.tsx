@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 
 import { Contest } from "../interface/index"
 import { Problem } from "../interface/index"
 import { HoldContestInfo } from '../interface/index';
 
 
-interface ProblemsProps {
+interface DecideProblemsProps {
   holdContestInfo: HoldContestInfo
   setHoldContestInfo: Function
   allProblems: Problem[] 
@@ -16,7 +15,7 @@ const Diff: string[] = ["grey", "brawn", "green", "lightBlue", "blue", "yellow",
 const downDiff: number[] = [0, 400, 800, 1200, 1600, 2000, 2400, 2800]
 const upDiff: number[] = [400, 800, 1200, 1600, 2000, 2400, 2800, 5000]
 
-export const DecideProblem: React.FC<ProblemsProps> = ({holdContestInfo, setHoldContestInfo, allProblems }) => {
+export const DecideProblem: React.FC<DecideProblemsProps> = ({holdContestInfo, setHoldContestInfo, allProblems }) => {
   console.log("<DecideProblem>")
   const gachaProblem = (id: number) => {
     console.log(Diff[id])

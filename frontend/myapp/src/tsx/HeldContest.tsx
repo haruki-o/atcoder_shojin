@@ -1,25 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 
-import { Contest } from "../interface/index"
-import { Problem } from "../interface/index"
+import { Contest } from "../interface/index";
+import { Problem } from "../interface/index";
 import { HoldContestInfo } from '../interface/index';
 
-import { getContests, createContests } from "../api/contests"
-import { getProblems } from "../api/apis"
+import { getContests, createContests } from "../api/contests";
+import { getProblems } from "../api/apis";
 
-import { DecideProblem } from "./DecideProblem"
+import { DecideProblem } from "./DecideProblem";
 import { DateForm } from './DateForm';
+import { DecideDate } from './DecideDate';
 
 interface HeldContestProps {
-  holdContestInfo: HoldContestInfo
-  setHoldContestInfo: Function
   allProblems: Problem[] 
 }
 
-export const HeldContest:React.FC<HeldContestProps> = ({
-  holdContestInfo, setHoldContestInfo,allProblems
-}) => {
+export const HeldContest:React.FC<HeldContestProps> = ({allProblems}) => {
+  const [ holdContestInfo, setHoldContestInfo] = useState<HoldContestInfo>({
+    contest_info: {contest_name: 'none'},
+    problems: []
+  })
   const [ isDisplayMessage, setIsDisplayMessage ] = useState<boolean>(false)
   const navigate = useNavigate()
 
@@ -65,7 +66,7 @@ export const HeldContest:React.FC<HeldContestProps> = ({
   
 
   console.log("<HeldContest>")
-
+  
 
   return (
     <div>
@@ -95,6 +96,9 @@ export const HeldContest:React.FC<HeldContestProps> = ({
           })
         }
       </ul>
+      <DecideDate 
+        holdContestInfo={ holdContestInfo } 
+        setHoldContestInfo={ setHoldContestInfo } />
       <button onClick={() => checkHoldContest()}>held</button>
     </div>
   )

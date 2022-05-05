@@ -1,8 +1,14 @@
 export interface Contest {
-  contest_name: string
+  contest_name?: string
   user_name?: string
   password?: string
   perf_system?: number
+  startDate?: string
+  startHour?: number
+  startMinute?: number
+  endDate?: string
+  endHour?: number
+  endMinute?: number
 }
 
 export interface Problem {
