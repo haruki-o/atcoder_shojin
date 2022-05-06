@@ -1,5 +1,5 @@
 class ContestsController < ApplicationController
-  before_action :set_contest, only: [:show, :update, :destroy]
+  before_action :set_contest, only: [:show, :destroy]
 
   # GET /contests
   def index
@@ -15,7 +15,6 @@ class ContestsController < ApplicationController
   # POST /contests
   def create
     @contest = Contest.new(contest_params)
-
     if @contest.save
       render json: @contest, status: :created, location: @contest
     else
@@ -23,12 +22,16 @@ class ContestsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /contests/1
+  #PATCH/PUT /contest_page/:contest
   def update
-    if @contest.update(contest_params)
+    @contest = Contest.find_by(contest_name: params.keys[0])
+    puts params
+    puts params.keys[0]
+    puts @contest[:time]
+    if @contest.update(time: @contest[:time] + 1)
       render json: @contest
     else
-      render json: @contest.errors, status: :unprocessable_entity
+      render json: @contest.errors
     end
   end
 

@@ -5,6 +5,7 @@ import { Range } from 'immutable';
 import { Contest } from "../interface/index"
 import { Problem } from "../interface/index"
 import { HoldContestInfo } from '../interface/index';
+import { stat } from 'fs';
 
 
 interface DecideDateProps {
@@ -22,7 +23,7 @@ export const DecideDate: React.FC<DecideDateProps> = ({holdContestInfo, setHoldC
     setHoldContestInfo({
       ...holdContestInfo,
       contest_info:{
-        ...holdContestInfo,
+        ...holdContestInfo.contest_info,
         startDate: `${yyyy}-${mm}-${dd}`,
         startHour: today.getHours(),
         startMinute: (today.getMinutes() - today.getMinutes() % 5 + 5) % 60,
@@ -45,6 +46,7 @@ export const DecideDate: React.FC<DecideDateProps> = ({holdContestInfo, setHoldC
   }, [])
 
   console.log("<DecideDate>")
+  console.log(holdContestInfo.contest_info.startDate)
   return (
     <div>
       <Row>
@@ -55,13 +57,19 @@ export const DecideDate: React.FC<DecideDateProps> = ({holdContestInfo, setHoldC
               type="date"
               value={holdContestInfo.contest_info.startDate}
               onChange={(e): void => setHoldContestInfo({
-                contest_info:{startDate: Number(e.target.value)}})}
+                ...holdContestInfo,
+                contest_info:{
+                  ...holdContestInfo.contest_info,
+                  startDate: e.target.value}})}
             />
             <Input
               type="select"
               value={holdContestInfo.contest_info.startHour}
               onChange={(e): void => setHoldContestInfo({
-                contest_info:{startHour: Number(e.target.value)}})}
+                ...holdContestInfo,
+                contest_info:{
+                  ...holdContestInfo.contest_info,
+                  startHour: e.target.value}})}
             >
               {Range(0, 24).map((i) => (
                 <option key={i} value={i}>
@@ -73,7 +81,10 @@ export const DecideDate: React.FC<DecideDateProps> = ({holdContestInfo, setHoldC
               type="select"
               value={holdContestInfo.contest_info.startMinute}
               onChange={(e): void => setHoldContestInfo({
-                contest_info:{startMinute: Number(e.target.value)}})}
+                ...holdContestInfo,
+                contest_info:{
+                  ...holdContestInfo.contest_info,
+                  startMinute: e.target.value}})}
             >
               {Range(0, 60, 5).map((i) => (
                 <option key={i} value={i}>
@@ -93,13 +104,19 @@ export const DecideDate: React.FC<DecideDateProps> = ({holdContestInfo, setHoldC
               type="date"
               value={holdContestInfo.contest_info.endDate}
               onChange={(e): void => setHoldContestInfo({
-                contest_info:{endDate: Number(e.target.value)}})}
+                ...holdContestInfo,
+                contest_info:{
+                  ...holdContestInfo.contest_info,
+                  endDate: e.target.value}})}
             />
             <Input
               type="select"
               value={holdContestInfo.contest_info.endHour}
               onChange={(e): void => setHoldContestInfo({
-                contest_info:{endHour: Number(e.target.value)}})}
+                ...holdContestInfo,
+                contest_info:{
+                  ...holdContestInfo.contest_info,
+                  endHour: e.target.value}})}
             >
               {Range(0, 24).map((i) => (
                 <option key={i} value={i}>
@@ -111,7 +128,10 @@ export const DecideDate: React.FC<DecideDateProps> = ({holdContestInfo, setHoldC
               type="select"
               value={holdContestInfo.contest_info.endMinute}
               onChange={(e): void => setHoldContestInfo({
-                contest_info:{endMinute: Number(e.target.value)}})}
+                ...holdContestInfo,
+                contest_info:{
+                  ...holdContestInfo.contest_info,
+                  endMinute: e.target.value}})}
             >
               {Range(0, 60, 5).map((i) => (
                 <option key={i} value={i}>

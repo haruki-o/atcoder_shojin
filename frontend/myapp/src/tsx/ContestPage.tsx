@@ -14,6 +14,8 @@ interface ContestPageProps {
 
 export const ContestPage: React.FC<ContestPageProps> = ({allProblems
 }) => {
+  const [ isOpen, setIsOpen ] = useState<boolean>(false)
+
   console.log("render <ContestPage>")
   return (
     <div>
@@ -26,6 +28,7 @@ export const ContestPage: React.FC<ContestPageProps> = ({allProblems
         })
       }
       </ul>
+      <h1></h1>
     </div>
   )
 }

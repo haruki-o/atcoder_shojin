@@ -37,7 +37,8 @@ export const DecideProblem: React.FC<DecideProblemsProps> = ({holdContestInfo, s
       {
         Diff.map((value: string, index: number) => {
           return (
-            <button 
+            <button
+              disabled = {holdContestInfo.problems.length > 10 ? true : false}
               onClick = {() => {gachaProblem(index)}}
             >
               {value}

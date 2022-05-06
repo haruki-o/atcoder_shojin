@@ -8,37 +8,37 @@
 Contest.create([
   {
     contest_name: 'test_contest',
-    user_name: 'ogawakun_test', 
-    password: 'test_password',
-    perf_system: 1
+    password: 'test_password'
   },
   {
     contest_name: 'test2_contest',
-    user_name: 'ogawakun2_test', 
-    password: 'test2_password',
-    perf_system: 2
+    password: 'test2_password'
+  },
+  {
+    contest_name: 'test',
+    password: 'test_password',
+    time: 1
   }
 ]
 )
 
-History.create([
-  {
-    contest_name: 'test_contest',
-    time: '',
-    date: '',
-    user_name: '',
-    user_rating: '',
-    problemA: '';
-    problemB: ''
-  },
-  {
-    contest_name: '',
-    time: '',
-    date: '',
-    user_name: '',
-    user_rating: '',
-    problemA: '';
-    problemB: ''
-  }
-]
-)
+# History.create([
+#   {
+#     contest_name: 'test_contest',
+#     time: '',
+#     date: '',
+#     user_name: '',
+#     user_rating: '',
+#     problemA: '';
+#     problemB: ''
+#   },
+#   {
+#     contest_name: '',
+#     time: '',
+#     date: '',
+#     user_name: '',
+#     user_rating: '',
+#     problemA: '';
+#     problemB: ''
+#   }
+# ]

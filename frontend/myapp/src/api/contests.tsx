@@ -16,5 +16,9 @@ export const createContests = (date : Contest) => {
 }
 
 export const holdContests = (data: HoldContestInfo) => {
-  return base.post("/contests", data);
+  return base.post("/history", data);
+}
+
+export const updateContestTime = (contest_name: string) => {
+  return base.patch("/contests", contest_name);
 }

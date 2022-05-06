@@ -10,7 +10,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_05_03_000954) do
+ActiveRecord::Schema.define(version: 2022_05_06_055828) do
+
+  create_table "apis", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "contestId"
+    t.integer "diff"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
 
   create_table "contests", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "contest_name"
@@ -23,11 +30,8 @@ ActiveRecord::Schema.define(version: 2022_05_03_000954) do
   end
 
   create_table "histories", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.string "constest_name"
+    t.string "contest_name"
     t.integer "time"
-    t.time "date"
-    t.string "user_name"
-    t.string "user_rating"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "problemA"
@@ -40,12 +44,26 @@ ActiveRecord::Schema.define(version: 2022_05_03_000954) do
     t.string "problemH"
     t.string "problemI"
     t.string "problemJ"
-    t.integer "contest_time"
+    t.datetime "start_date"
+    t.datetime "end_date"
   end
 
-  create_table "problem_apis", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.string "contestId"
-    t.integer "diff"
+  create_table "users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "contest_name"
+    t.integer "time"
+    t.string "user_name"
+    t.integer "performance"
+    t.integer "WA"
+    t.datetime "ProblemA"
+    t.datetime "ProblemB"
+    t.datetime "ProblemC"
+    t.datetime "ProblemD"
+    t.datetime "ProblemE"
+    t.datetime "ProblemF"
+    t.datetime "ProblemG"
+    t.datetime "ProblemH"
+    t.datetime "ProblemI"
+    t.datetime "ProblemJ"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end

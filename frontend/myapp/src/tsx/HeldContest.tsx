@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from "react-router-dom";
+import { NavigationType, useNavigate } from "react-router-dom";
 
 import { Contest } from "../interface/index";
 import { Problem } from "../interface/index";
 import { HoldContestInfo } from '../interface/index';
 
-import { getContests, createContests } from "../api/contests";
+import { getContests, updateContestTime, holdContests } from "../api/contests";
 import { getProblems } from "../api/apis";
 
 import { DecideProblem } from "./DecideProblem";
@@ -21,15 +21,29 @@ export const HeldContest:React.FC<HeldContestProps> = ({allProblems}) => {
     contest_info: {contest_name: 'none'},
     problems: []
   })
-  const [ isDisplayMessage, setIsDisplayMessage ] = useState<boolean>(false)
+  const [ isContest, setIsContest ] = useState<boolean>(false)
   const navigate = useNavigate()
 
   const handleHoldContest = async () => {
     try {
-      const res = await getContests();
-      console.log(res.data);
-      if(res.status === 200){
-          navigate("/contest_page");
+      const res1 = await updateContestTime(holdContestInfo.contest_info.contest_name);
+      console.log(res1);
+      if(res1.status === 200){
+        setHoldContestInfo((prev: HoldContestInfo) => ({
+          contest_info: prev.contest_info,
+          problems: [...holdContestInfo.problems, addProblem]
+        }))
+        setHoldContestInfo((prev: HoldContestInfo) =>({
+          problems: prev.problems,
+          contest_info:{
+            ...holdContestInfo.contest_info,
+            time: res1.data.time}
+        }))
+        console.log(holdContestInfo);
+        const res2 = await holdContests(holdContestInfo);
+        if(res2.status === 200){
+          navigate('contest_page');
+        }
       }
     }
     catch (err) {
@@ -53,9 +67,9 @@ export const HeldContest:React.FC<HeldContestProps> = ({allProblems}) => {
         console.log(isSameContest)
         if(!isSameContest || holdContestInfo.problems.length === 0){
           if(!isSameContest)
-            setIsDisplayMessage(true);
+            setIsContest(true);
           else 
-            setIsDisplayMessage(false);
+            setIsContest(false);
         } else handleHoldContest();
       }
     }
@@ -66,7 +80,7 @@ export const HeldContest:React.FC<HeldContestProps> = ({allProblems}) => {
   
 
   console.log("<HeldContest>")
-  
+  console.log(holdContestInfo)
 
   return (
     <div>
@@ -81,7 +95,7 @@ export const HeldContest:React.FC<HeldContestProps> = ({allProblems}) => {
           })
         }}
       />
-      { isDisplayMessage ? '存在しません' : ''}
+      { isContest ? '存在しません' : ''}
       <DecideProblem 
         holdContestInfo={ holdContestInfo } setHoldContestInfo={ setHoldContestInfo } 
         allProblems = { allProblems } />

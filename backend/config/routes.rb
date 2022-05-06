@@ -1,9 +1,8 @@
 Rails.application.routes.draw do
-  resources :contests
-  get 'contests', to: 'contest#index'
-  post 'contests', to: 'contest#create'
-  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
-  resources :apis
-  get 'apis', to: 'api#index'
-  
+    get '/contests', to: 'contests#index'
+    post '/contests', to: 'contests#create'
+    patch '/contests', to: 'contests#update'
+    get '/apis', to: 'apis#index'
+    # get '/contest_page/:contest_name/:time', to: 'histories#index'
+    post '/history', to: 'histories#create'
 end
