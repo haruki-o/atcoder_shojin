@@ -55,10 +55,10 @@ const App: React.FC = () => {
           <Route path="/" element={<Home />} />
           <Route path="/index" element={<ContestIndex />} />
           <Route path="/held" element={<HeldContest 
-            allProblems = { allProblems} />} />
+            allProblems = { allProblems } />} />
           <Route path="/create" element={<Create />} />
-          <Route path="/contest_page" element={<ContestPage
-            allProblems = { allProblems} />} />
+          <Route path="/contest_page/*" element={<ContestPage
+            allProblems = { allProblems } />} />
         </Routes>
       </BrowserRouter>
     </div>

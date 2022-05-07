@@ -20,7 +20,7 @@ export const DecideDate: React.FC<DecideDateProps> = ({holdContestInfo, setHoldC
     const yyyy = today.getFullYear();
     const mm = ("0"+(today.getMonth()+1)).slice(-2);
     const dd = ("0"+today.getDate()).slice(-2);
-    setHoldContestInfo({
+    setHoldContestInfo((prev: HoldContestInfo) => ({
       ...holdContestInfo,
       contest_info:{
         ...holdContestInfo.contest_info,
@@ -31,7 +31,7 @@ export const DecideDate: React.FC<DecideDateProps> = ({holdContestInfo, setHoldC
         endHour: (today.getHours() + 1) % 24,
         endMinute: (today.getMinutes() - today.getMinutes() % 5 + 5) % 60
       }
-    })
+    }))
     // const [startDate, setStartDate] = useState(`${yyyy}-${mm}-${dd}`);
     // const [startHour, setStartHour] = useState(today.getHours());
     // const [startMinute, setStartMinute] = useState((today.getMinutes() - today.getMinutes() % 5 + 5) % 60);
@@ -69,7 +69,7 @@ export const DecideDate: React.FC<DecideDateProps> = ({holdContestInfo, setHoldC
                 ...holdContestInfo,
                 contest_info:{
                   ...holdContestInfo.contest_info,
-                  startHour: e.target.value}})}
+                  startHour: Number(e.target.value)}})}
             >
               {Range(0, 24).map((i) => (
                 <option key={i} value={i}>
@@ -84,7 +84,7 @@ export const DecideDate: React.FC<DecideDateProps> = ({holdContestInfo, setHoldC
                 ...holdContestInfo,
                 contest_info:{
                   ...holdContestInfo.contest_info,
-                  startMinute: e.target.value}})}
+                  startMinute: Number(e.target.value)}})}
             >
               {Range(0, 60, 5).map((i) => (
                 <option key={i} value={i}>
@@ -116,7 +116,7 @@ export const DecideDate: React.FC<DecideDateProps> = ({holdContestInfo, setHoldC
                 ...holdContestInfo,
                 contest_info:{
                   ...holdContestInfo.contest_info,
-                  endHour: e.target.value}})}
+                  endHour: Number(e.target.value)}})}
             >
               {Range(0, 24).map((i) => (
                 <option key={i} value={i}>
@@ -131,7 +131,7 @@ export const DecideDate: React.FC<DecideDateProps> = ({holdContestInfo, setHoldC
                 ...holdContestInfo,
                 contest_info:{
                   ...holdContestInfo.contest_info,
-                  endMinute: e.target.value}})}
+                  endMinute: Number(e.target.value)}})}
             >
               {Range(0, 60, 5).map((i) => (
                 <option key={i} value={i}>

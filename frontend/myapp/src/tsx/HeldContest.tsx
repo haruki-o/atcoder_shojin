@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { NavigationType, useNavigate } from "react-router-dom";
 
-import { Contest } from "../interface/index";
-import { Problem } from "../interface/index";
-import { HoldContestInfo } from '../interface/index';
+import { Contest, Problem, HoldContestInfo } from '../interface/index';
 
 import { getContests, updateContestTime, holdContests } from "../api/contests";
 import { getProblems } from "../api/apis";
@@ -22,27 +20,22 @@ export const HeldContest:React.FC<HeldContestProps> = ({allProblems}) => {
     problems: []
   })
   const [ isContest, setIsContest ] = useState<boolean>(false)
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleHoldContest = async () => {
     try {
       const res1 = await updateContestTime(holdContestInfo.contest_info.contest_name);
       console.log(res1);
       if(res1.status === 200){
-        setHoldContestInfo((prev: HoldContestInfo) => ({
-          contest_info: prev.contest_info,
-          problems: [...holdContestInfo.problems, addProblem]
-        }))
-        setHoldContestInfo((prev: HoldContestInfo) =>({
-          problems: prev.problems,
-          contest_info:{
-            ...holdContestInfo.contest_info,
-            time: res1.data.time}
-        }))
+        holdContestInfo.contest_info.time = res1.data.time;
         console.log(holdContestInfo);
         const res2 = await holdContests(holdContestInfo);
-        if(res2.status === 200){
-          navigate('contest_page');
+        console.log(res2)
+        if(res2.status === 201){
+          navigate(
+            `/contest_page/${holdContestInfo.contest_info.contest_name}/${holdContestInfo.contest_info.time}`,
+            {state: holdContestInfo.contest_info}
+          );
         }
       }
     }
@@ -56,7 +49,7 @@ export const HeldContest:React.FC<HeldContestProps> = ({allProblems}) => {
       const res = await getContests();
       console.log(res.data);
       if(res.status === 200){
-        console.log("get consts all success!")
+        console.log("get contests all success!")
         var isSameContest: boolean = false;
         res.data.map((value: Contest) => {
           if(value.contest_name === holdContestInfo.contest_info.contest_name){
@@ -77,11 +70,7 @@ export const HeldContest:React.FC<HeldContestProps> = ({allProblems}) => {
       console.log(err);           
     }
   }
-  
-
   console.log("<HeldContest>")
-  console.log(holdContestInfo)
-
   return (
     <div>
       contest name
@@ -90,8 +79,10 @@ export const HeldContest:React.FC<HeldContestProps> = ({allProblems}) => {
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
           const { value }: { value : string } = e.target
           setHoldContestInfo({
-            contest_info: {contest_name: value},
-            problems: holdContestInfo.problems
+            ...holdContestInfo,
+            contest_info: {
+              ...holdContestInfo.contest_info,
+              contest_name: value},
           })
         }}
       />

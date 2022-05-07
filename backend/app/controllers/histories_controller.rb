@@ -1,28 +1,29 @@
 class HistoriesController < ApplicationController
   def index
     @contest = History.find_by(
-      contest_name: params[:contesst], 
-      time: params[:time])
+      contest_name: params[:contest_name], 
+      time: params[:time].to_i)
     render json: @contest
   end
 
   # POST /history
   def create
-    # @contest = History.new({
-    #   contest_name: params[:contest_info][:contest_name],
-    #   time: params[:contest_info][:time],
-    #   problemA: params[:problems][0][:contest_id],
-    #   problemB: params[:problems][1][:contest_id],
-    #   problemC: params[:problems][2][:contest_id],
-    #   problemD: params[:problems][3][:contest_id],
-    #   problemE: params[:problems][4][:contest_id],
-    #   problemF: params[:problems][5][:contest_id],
-    #   problemG: params[:problems][6][:contest_id],
-    #   problemH: params[:problems][7][:contest_id],
-    #   problemI: params[:problems][8][:contest_id],
-    #   problemJ: params[:problems][9][:contest_id],
-    # })
-    puts `#{params[:contest_info][:startDate]} #{params[:contest_info][:startHour]}-#{params[:contest_info][:startMinute]}`
+    @contest = History.new({
+      contest_name: params[:contest_info][:contest_name],
+      time: params[:contest_info][:time],
+      problemA: params[:problems][0][:contest_id],
+      problemB: params[:problems][1][:contest_id],
+      problemC: params[:problems][2][:contest_id],
+      problemD: params[:problems][3][:contest_id],
+      problemE: params[:problems][4][:contest_id],
+      problemF: params[:problems][5][:contest_id],
+      problemG: params[:problems][6][:contest_id],
+      problemH: params[:problems][7][:contest_id],
+      problemI: params[:problems][8][:contest_id],
+      problemJ: params[:problems][9][:contest_id],
+      start_date: "#{params[:contest_info][:startDate]} #{params[:contest_info][:startHour]}:#{params[:contest_info][:startMinute]}:00",
+      end_date: "#{params[:contest_info][:endDate]} #{params[:contest_info][:endHour]}:#{params[:contest_info][:endMinute]}:00"
+    })
     if @contest.save
       render json: @contest, status: :created, location: @contest
     else
