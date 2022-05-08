@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { Button } from 'reactstrap';
 
 import { Contest } from "../interface/index"
 import { Problem } from "../interface/index"
@@ -12,6 +14,9 @@ interface DecideProblemsProps {
 }
 
 const Diff: string[] = ["grey", "brawn", "green", "lightBlue", "blue", "yellow", "orange", "red"]
+const DiffColor: string[] = ["#808080","#804000","#008000","#00C0C0","#0000FF","#C0C000","#FF8000","#FF0000"]
+const DiffJP: string[] = ["灰","茶","緑","水","青","黄","橙","赤"]
+
 const downDiff: number[] = [0, 400, 800, 1200, 1600, 2000, 2400, 2800]
 const upDiff: number[] = [400, 800, 1200, 1600, 2000, 2400, 2800, 5000]
 
@@ -33,16 +38,23 @@ export const DecideProblem: React.FC<DecideProblemsProps> = ({holdContestInfo, s
   }
 
   return (
-    <div>
+    <div style={{marginTop: "20px"}}>
       {
         Diff.map((value: string, index: number) => {
           return (
-            <button
+            <Button
+              style={{
+                backgroundColor: DiffColor[index],
+                height: "40px",
+                width: "50px",
+                margin: "4px",
+                borderRadius: "30px",
+              }}
               disabled = {holdContestInfo.problems.length > 10 ? true : false}
               onClick = {() => {gachaProblem(index)}}
             >
-              {value}
-            </button>
+              {DiffJP[index]}
+            </Button>
           )
         })
       }

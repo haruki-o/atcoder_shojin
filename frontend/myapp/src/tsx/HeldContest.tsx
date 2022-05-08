@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { NavigationType, useNavigate } from "react-router-dom";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { Button } from 'reactstrap';
 
 import { Contest, Problem, HoldContestInfo } from '../interface/index';
 
@@ -72,7 +74,7 @@ export const HeldContest:React.FC<HeldContestProps> = ({allProblems}) => {
   }
   console.log("<HeldContest>")
   return (
-    <div>
+    <div style={{margin: "20px 20px"}}>
       contest name
       <input 
         type="text"
@@ -104,7 +106,9 @@ export const HeldContest:React.FC<HeldContestProps> = ({allProblems}) => {
       <DecideDate 
         holdContestInfo={ holdContestInfo } 
         setHoldContestInfo={ setHoldContestInfo } />
-      <button onClick={() => checkHoldContest()}>held</button>
+      <Button 
+        style={{marginTop: "20px"}}
+        onClick={() => checkHoldContest()}>held</Button>
     </div>
   )
 }

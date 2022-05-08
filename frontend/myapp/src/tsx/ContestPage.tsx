@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
-
-import { Container, Col, Label, Row , Input, InputGroup } from 'reactstrap';
+import { Table, Button } from 'reactstrap';
 
 import { Contest, Problem, HoldContestInfo } from '../interface/index';
 
@@ -16,8 +15,8 @@ interface ContestPageProps {
 export const ContestPage: React.FC<ContestPageProps> = ({allProblems
 }) => {
   const [ isOpen, setIsOpen ] = useState<boolean>(false)
+  const [ contestProblem, setContestProblem ] = useState<string[]>([]);
   const location: any = useLocation().state;
-  const contestProblem: string[] = [];
 
   const getContestInfoInitial = async () => {
     try {
@@ -27,15 +26,15 @@ export const ContestPage: React.FC<ContestPageProps> = ({allProblems
       if(res.status === 200){
         console.log(res.data)
         const pattern: string = "problem"
+        const addContestProblem: string[] = []
         for(const [key, value] of Object.entries(res.data)){
           if(key.indexOf(pattern) === 0 && value !== "null"){
             console.log(key, value);
-            contestProblem.push(String(value));
+            addContestProblem.push(String(value));
             // console.log(typeof(key),typeof(value))
           }
         }
-        console.log(contestProblem);
-        console.log("success")
+        setContestProblem(addContestProblem);
       }
     }
     catch (err) {
@@ -49,25 +48,37 @@ export const ContestPage: React.FC<ContestPageProps> = ({allProblems
 
   console.log("render <ContestPage>")
   return (
-    <Container>
-      <Row>
-        <Col>a</Col>
-        {
-          // contestProblem.map((problem: string, index: number) => {
-          //   console.log(problem)
-          //   return(
-          //     <Col>b{problem}</Col>
-          //   )
-          // }) 
-          contestProblem.map((problem: string, index: number) => {
-            console.log(problem)
-            return(
-              <Col>b{problem}</Col>
-            )
-          }) 
-        }
-        <Col>d</Col>
-      </Row>
-    </Container>
+    <div>
+      <Button>join</Button>
+      <Table striped style={{margin: "5%", width: "80%", textAlign: "center"}}>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>username</th>
+            {
+              contestProblem.map((problem: string, index: number) => {
+                const problemUrl: string = `https://atcoder.jp/contests/${problem.substr(0,problem.length-2)}/tasks/${problem}`;
+                  return(
+                    <th>
+                      <a href={problemUrl} target="_blank" >{index}</a>
+                    </th>
+                  )
+              }) 
+            }
+          </tr>
+        </thead>
+        <tbody>
+          <th scope="row">1</th>
+          <td>og</td>
+          {
+            contestProblem.map((problem: string, index: number) => {
+                return(
+                  <td>-</td>
+                )
+            }) 
+          }
+        </tbody>
+      </Table>
+    </div>     
   )
 }
