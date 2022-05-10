@@ -6,6 +6,11 @@ class HistoriesController < ApplicationController
     render json: @contest
   end
 
+  def find 
+    @contest = History.where(contest_name: params[:contest_name])
+    render json: @contest
+  end
+
   # POST /history
   def create
     @contest = History.new({

@@ -46,6 +46,21 @@ export const HeldContest:React.FC<HeldContestProps> = ({allProblems}) => {
     }
   }
 
+  const getContestTime = async () => {
+    try { 
+      const res: any = await getContests();
+      if(res.status === 200){
+      res.data.map((value: Contest, key: number) =>{
+        if(value.contest_name === holdContestInfo.contest_info.contest_name){
+          holdContestInfo.contest_info.time = value.time;
+        }
+      })
+    } 
+    catch (err) {
+      console.log(err);
+    }
+  }
+
   const checkHoldContest = async () => {
     try {
       const res = await getContests();
@@ -65,7 +80,7 @@ export const HeldContest:React.FC<HeldContestProps> = ({allProblems}) => {
             setIsContest(true);
           else 
             setIsContest(false);
-        } else handleHoldContest();
+        } else getContestTime();
       }
     }
     catch (err) {

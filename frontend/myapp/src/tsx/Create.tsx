@@ -10,7 +10,7 @@ interface createContest {
   condition: boolean
 }
 export const Create = () => {
-  const [ contest, setContests] = useState<Contest>({ contest_name : "none" })
+  const [ contest, setContests] = useState<Contest>({ contest_name : "none", time : 1 })
   const navigate = useNavigate()
 
   const handleCreateContest = async () => {
@@ -33,7 +33,7 @@ export const Create = () => {
         type="text" 
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
           const { value }: { value : string } = e.target
-          setContests({contest_name: value})
+          setContests({contest_name: value, time: 1})
         }}
       />
       <button onClick={() => {

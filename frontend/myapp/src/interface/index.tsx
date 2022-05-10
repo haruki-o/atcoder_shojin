@@ -19,13 +19,22 @@ export interface Problem {
 
 export interface History {
   contest_name: string
-  id: number
-  date: Date
-  user_name: string
-  user_rating: number
+  time: number
+  start_date: Date
+  end_date: Date
+  problems?: string[]
 }
 
 export interface HoldContestInfo {
   contest_info: Contest
   problems: Problem[]
+}
+
+export interface User {
+  contest_name: string
+  time: number 
+  user_name: string 
+  performance?: number
+  WA?: number 
+  problems?: string[]
 }

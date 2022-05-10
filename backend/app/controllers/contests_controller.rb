@@ -6,17 +6,13 @@ class ContestsController < ApplicationController
     @contests = Contest.all
     render json: @contests
   end
-
-  # GET /contests/1
-  def show
-    render json: @contest
-  end
-
+  
   # POST /contests
   def create
+    puts contest_params
     @contest = Contest.new(contest_params)
     if @contest.save
-      render json: @contest, status: :created, location: @contest
+      render json: @contest
     else
       render json: @contest.errors, status: :unprocessable_entity
     end
@@ -24,10 +20,10 @@ class ContestsController < ApplicationController
 
   #PATCH/PUT /contest_page/:contest
   def update
-    @contest = Contest.find_by(contest_name: params.keys[0])
-    puts params
-    puts params.keys[0]
-    puts @contest[:time]
+    @contest = Contest.where(contest_name: params.keys[0])
+    puts json: @contest
+    puts @contest
+    puts '-----------------'
     if @contest.update(time: @contest[:time] + 1)
       render json: @contest
     else
@@ -48,6 +44,6 @@ class ContestsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def contest_params
-      params.require(:contest).permit(:contest_name, :user_name, :password, :perf_system)
+      params.require(:contest).permit(:contest_name, :user_name, :password, :perf_system, :time)
     end
 end

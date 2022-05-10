@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Table, Button } from 'reactstrap';
+import { Table, Button, Col, Label, InputGroup, Input } from 'reactstrap';
 
-import { Contest, Problem, HoldContestInfo } from '../interface/index';
+import { Contest, Problem, HoldContestInfo, User } from '../interface/index';
 
-import { createContests, getContestInfo } from "../api/contests"
+import { getContestInfo, joinUser, joiningUser } from "../api/contests"
 import { stringify } from 'querystring';
 
 interface ContestPageProps {
@@ -14,14 +14,44 @@ interface ContestPageProps {
 
 export const ContestPage: React.FC<ContestPageProps> = ({allProblems
 }) => {
-  const [ isOpen, setIsOpen ] = useState<boolean>(false)
-  const [ contestProblem, setContestProblem ] = useState<string[]>([]);
-  const location: any = useLocation().state;
+  const location: any = useLocation();
+  const navigate = useNavigate();
 
+  const [ isOpen, setIsOpen ] = useState<boolean>(false);
+  const [ isLogin, setIsLogin ] = useState<boolean>(
+    location.pathname.split('/').length === 5 ? true : false
+  );
+  const [ userName, setUserName ] = useState<string>("");
+  const [ contestProblem, setContestProblem ] = useState<string[]>([]);
+
+  console.log(location.state)
+
+  const handleJoinContest = async () => {
+    try {
+      console.log(location.pathname)
+      console.log(location.state);
+      const sendDate: User = {
+        contest_name: location.state.contest_name,
+        time: location.state.time,
+        user_name: userName
+      }
+      const res: any = await joinUser(sendDate);
+      console.log(res);
+      if(res.status === 200){
+        console.log("success")
+        setIsLogin(true)
+        navigate(`${location.pathname}/${userName}`,
+        {state: location.state});
+      }
+    }
+    catch (err) {
+      console.log(err);
+    }
+  }
   const getContestInfoInitial = async () => {
     try {
-      console.log(location)
-      const res: any = await getContestInfo(location);
+      console.log(location.state)
+      const res: any = await getContestInfo(location.state);
       console.log(res);
       if(res.status === 200){
         console.log(res.data)
@@ -41,15 +71,45 @@ export const ContestPage: React.FC<ContestPageProps> = ({allProblems
       console.log(err)
     }
   }
+  const getContestUserInfo = async () => {
+    try {
+      const res: any = await joiningUser(location.state.contest_name, location.state.time);
+      console.log(res);
+      if(res.status === 200){
+        console.log("success");
+        console.log(res.data)
+      }
+    }
+    catch (err) {
+      console.log(err);
+    } 
+  }
+
+
 
   useEffect(() => {
     getContestInfoInitial()
+    getContestUserInfo();
   }, [])
 
   console.log("render <ContestPage>")
   return (
     <div>
-      <Button>join</Button>
+      { isLogin === false && 
+        <Col>
+          <InputGroup style={{padding: "10px"}}>
+            username: 
+            <Input 
+              type="text"
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                const { value }: { value : string } = e.target
+                setUserName(value)
+              }}
+              style={{margin: "0 0 0 10px"}}/>
+            <Button onClick = {() => handleJoinContest()}>join</Button>
+          </InputGroup>
+        </Col>
+      }
       <Table striped style={{margin: "5%", width: "80%", textAlign: "center"}}>
         <thead>
           <tr>
