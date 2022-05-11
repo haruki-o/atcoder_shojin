@@ -26,9 +26,11 @@ export const joinUser = (user: User) => {
   return base.post(`/contest_page/${user.contest_name}/${user.time}/${user.user_name}`, user);
 }
 export const joiningUser = (contest_name: string, time: number) => {
-  return base.get(`/contest_page/${contest_name}/${time}`)
+  return base.get(`/contest_page/user/${contest_name}/${time}`)
 }
-
+export const updateUserAC = (user: User, problem: string, ACDate: Date) => {
+  return base.patch(`/contest_page/user/update`, {user, problem, ACDate})
+}
 // "/histries"
 export const holdContests = (data: HoldContestInfo) => {
   const addProblem: Problem = {contest_id: "null", difficulty: 0}

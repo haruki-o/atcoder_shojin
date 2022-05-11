@@ -20,6 +20,7 @@ export const ContestIndex: React.FC<ContestIndexProps> = ({ allContests }) => {
       const res: any = await getHistoryIndex(contest_name);
       console.log(res);
       var holdTime: number = -1;
+      var holdKey: number = -1;
       if(res.status === 200){
         const now: Date = new Date();
         console.log(now)
@@ -30,14 +31,24 @@ export const ContestIndex: React.FC<ContestIndexProps> = ({ allContests }) => {
           en_date.setHours(en_date.getHours() - 9);
           if(sta_date < now && now < en_date){
             holdTime = value.time;
+            holdKey = key;
           }
         })
         console.log(holdTime)
         console.log(`/contest_page/${contest_name}/${holdTime}`)
-        navigate(
-          `/contest_page/${contest_name}/${holdTime}`,
-          {state: {contest_name: contest_name, time: holdTime}}
-        )
+        if(holdTime !== -1){
+          const sta_date: Date = new Date(res.data[holdKey].start_date);
+          const en_date: Date = new Date(res.data[holdKey].end_date);
+          sta_date.setHours(sta_date.getHours() - 9);
+          en_date.setHours(en_date.getHours() - 9);
+          navigate(
+            `/contest_page/${contest_name}/${holdTime}`,
+            {state: {
+              contest_name: contest_name, time: holdTime,
+              start_date: sta_date, end_date: en_date,
+            }}
+          )
+        }
       }
     }
     catch (err) {

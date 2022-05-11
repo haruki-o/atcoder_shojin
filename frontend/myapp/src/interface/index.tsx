@@ -36,5 +36,14 @@ export interface User {
   user_name: string 
   performance?: number
   WA?: number 
-  problems?: string[]
+  ProblemA?: Date
+  ProblemB?: Date
+  ProblemC?: Date
+  ProblemD?: Date
+  ProblemE?: Date
+  ProblemF?: Date
+  ProblemG?: Date
+  ProblemH?: Date
+  ProblemI?: Date
+  ProblemJ?: Date
 }

@@ -20,9 +20,10 @@ class ContestsController < ApplicationController
 
   #PATCH/PUT /contest_page/:contest
   def update
-    @contest = Contest.where(contest_name: params.keys[0])
+    @contest = Contest.find_by(contest_name: params.keys[0])
+    # @contest.increment(:time, 1)
     puts json: @contest
-    puts @contest
+    puts @contest[:time]
     puts '-----------------'
     if @contest.update(time: @contest[:time] + 1)
       render json: @contest
