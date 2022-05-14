@@ -11,6 +11,7 @@ interface DecideProblemsProps {
   holdContestInfo: HoldContestInfo
   setHoldContestInfo: Function
   allProblems: Problem[] 
+  allDiffProblems: Problem[][]
 }
 
 const Diff: string[] = ["grey", "brawn", "green", "lightBlue", "blue", "yellow", "orange", "red"]
@@ -20,23 +21,18 @@ const DiffJP: string[] = ["灰","茶","緑","水","青","黄","橙","赤"]
 const downDiff: number[] = [0, 400, 800, 1200, 1600, 2000, 2400, 2800]
 const upDiff: number[] = [400, 800, 1200, 1600, 2000, 2400, 2800, 5000]
 
-export const DecideProblem: React.FC<DecideProblemsProps> = ({holdContestInfo, setHoldContestInfo, allProblems }) => {
-  console.log("<DecideProblem>")
+export const DecideProblem: React.FC<DecideProblemsProps> = ({holdContestInfo, setHoldContestInfo, allProblems, allDiffProblems}) => {
   const gachaProblem = (id: number) => {
-    console.log(Diff[id])
-    const problemIndex: Problem[] = []
-    allProblems.forEach((value, key) => {
-      if(downDiff[id] <= value.difficulty && value.difficulty <= upDiff[id]){
-        problemIndex.push(value);
-      }
-    })
-    const addProblem: Problem = problemIndex[Math.floor(Math.random() * problemIndex.length)]
-    setHoldContestInfo((prev: HoldContestInfo) => ({
-      contest_info: prev.contest_info,
+    console.log(allDiffProblems)
+    const addProblem: Problem = allDiffProblems[id][Math.floor(Math.random() * allDiffProblems[id].length)]
+    console.log(addProblem)
+    setHoldContestInfo({
+      ...holdContestInfo,
       problems: [...holdContestInfo.problems, addProblem]
-    }))
+    })
   }
-
+  console.log("<DecideProblem>")
+  console.log(holdContestInfo)
   return (
     <div style={{marginTop: "20px"}}>
       {

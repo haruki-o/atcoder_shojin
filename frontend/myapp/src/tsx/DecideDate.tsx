@@ -21,7 +21,6 @@ export const DecideDate: React.FC<DecideDateProps> = ({holdContestInfo, setHoldC
     const mm = ("0"+(today.getMonth()+1)).slice(-2);
     const dd = ("0"+today.getDate()).slice(-2);
     setHoldContestInfo((prev: HoldContestInfo) => ({
-      ...holdContestInfo,
       contest_info:{
         ...holdContestInfo.contest_info,
         startDate: `${yyyy}-${mm}-${dd}`,
@@ -30,23 +29,16 @@ export const DecideDate: React.FC<DecideDateProps> = ({holdContestInfo, setHoldC
         endDate: mm == "23" ? `${yyyy}-${mm}-00` : `${yyyy}-${mm}-${dd}`,
         endHour: (today.getHours() + 1) % 24,
         endMinute: (today.getMinutes() - today.getMinutes() % 5 + 5) % 60
-      }
+      },
+      problems: prev.problems
     }))
-    // const [startDate, setStartDate] = useState(`${yyyy}-${mm}-${dd}`);
-    // const [startHour, setStartHour] = useState(today.getHours());
-    // const [startMinute, setStartMinute] = useState((today.getMinutes() - today.getMinutes() % 5 + 5) % 60);
-
-    // const [endDate, setEndDate] = useState(mm == "23" ? `${yyyy}-${mm}-00` : startDate);
-    // const [endHour, setEndHour] = useState((startHour + 1) % 24);
-    // const [endMinute, setEndMinute] = useState(startMinute);
   }
 
-  useEffect(() => {
-   setInitialDate()
+  useEffect(() =>{
+    setInitialDate();
   }, [])
-
   console.log("<DecideDate>")
-  console.log(holdContestInfo.contest_info.startDate)
+  console.log(holdContestInfo)
   return (
     <div>
       <Row>

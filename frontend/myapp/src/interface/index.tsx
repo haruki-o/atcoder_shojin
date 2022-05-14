@@ -34,7 +34,7 @@ export interface User {
   contest_name: string
   time: number 
   user_name: string 
-  performance?: number
+  performance: number
   WA?: number 
   ProblemA?: Date
   ProblemB?: Date
@@ -46,4 +46,9 @@ export interface User {
   ProblemH?: Date
   ProblemI?: Date
   ProblemJ?: Date
+}
+
+export interface Graph {
+  performance: number[]
+  date: string[]
 }

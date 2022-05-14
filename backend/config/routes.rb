@@ -6,6 +6,7 @@ Rails.application.routes.draw do
     get '/apis', to: 'apis#index'
     
     get '/contest_page/user/:contest_name/:time', to: 'users#index'
+    get '/users/history/:contest_name/:user_name', to: 'users#all'
     post '/contest_page/:contest_name/:time/:user_name', to: 'users#create'
     patch '/contest_page/user/update', to: 'users#update'
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useLayoutEffect } from 'react';
 import { NavigationType, useNavigate } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button } from 'reactstrap';
@@ -12,27 +12,65 @@ import { DecideProblem } from "./DecideProblem";
 import { DateForm } from './DateForm';
 import { DecideDate } from './DecideDate';
 
-interface HeldContestProps {
-  allProblems: Problem[] 
-}
 
-export const HeldContest:React.FC<HeldContestProps> = ({allProblems}) => {
+export const HeldContest = () => {
   const [ holdContestInfo, setHoldContestInfo] = useState<HoldContestInfo>({
     contest_info: {contest_name: 'none'},
     problems: []
   })
   const [ isContest, setIsContest ] = useState<boolean>(false)
-  const navigate = useNavigate();
+  const [ allProblems, setAllProblems ] = useState<Problem[]>([])
+  const downDiff: number[] = [0, 400, 800, 1200, 1600, 2000, 2400, 2800]
+  const upDiff: number[] = [400, 800, 1200, 1600, 2000, 2400, 2800, 5000]
+  const [ allDiffProblems, setAllDiffProblems ] = useState<Problem[][]>(new Array(8));
 
+  const navigate = useNavigate();
+  
+  const getAllProblems = async () => {
+    try {
+      const res: any = await getProblems()
+      console.log(res);
+      if(res.status === 200){
+        console.log("get allProblem success!")
+        const pushAllProblems : Problem[] = []
+        const pushAllDiffProblems: Problem[][] = new Array(8);
+        for(let i = 0;i < 8;i++){
+          pushAllDiffProblems[i] = new Array();
+        }
+        for(const key of Object.keys(res.data)){
+          const diff: number = res.data[key].diff
+          const id: string = res.data[key].contestId
+          if(id == undefined || diff == undefined)continue;
+          const addProblem: Problem = {contest_id: id, difficulty: diff}
+          for(let i=0; i < 8; i++){
+            if(downDiff[i] <= diff && diff <= upDiff[i]){
+              pushAllDiffProblems[i].push(addProblem)
+            }
+          }
+          pushAllProblems.push(addProblem)
+        }
+        setAllProblems(pushAllProblems);
+        setAllDiffProblems(pushAllDiffProblems)
+      }
+    }
+    catch (err) {
+      console.log(err)
+    }
+  }
   const handleHoldContest = async () => {
     console.log("call handleHoldContest")
+    console.log(holdContestInfo.problems)
     try {
       const res1 = await updateContestTime(holdContestInfo.contest_info.contest_name);
       console.log(res1);
       if(res1.status === 200){
+        const sortedProblems: Problem[] = sortProblem(holdContestInfo.problems);
+        // console.log(sortProblem(holdContestInfo.problems));
         holdContestInfo.contest_info.time = res1.data.time;
-        console.log(holdContestInfo);
-        const res2 = await holdContests(holdContestInfo);
+        const res2 = await holdContests({
+          contest_info: holdContestInfo.contest_info,
+          problems: sortedProblems
+        });
         console.log(res2)
         if(res2.status === 201){
           navigate(
@@ -42,6 +80,7 @@ export const HeldContest:React.FC<HeldContestProps> = ({allProblems}) => {
               time: holdContestInfo.contest_info.time,
               start_date: new Date(`${holdContestInfo.contest_info.startDate} ${holdContestInfo.contest_info.startHour}:${holdContestInfo.contest_info.startMinute}`),
               end_date: new Date(`${holdContestInfo.contest_info.endDate} ${holdContestInfo.contest_info.endHour}:${holdContestInfo.contest_info.endMinute}`),
+              contest_problems: sortedProblems
             }}
           );
         }
@@ -52,23 +91,9 @@ export const HeldContest:React.FC<HeldContestProps> = ({allProblems}) => {
     }
   }
 
-  // const getContestTime = async () => {
-  //   try { 
-  //     const res: any = await getContests();
-  //     if(res.status === 200){
-  //     res.data.map((value: Contest, key: number) =>{
-  //       if(value.contest_name === holdContestInfo.contest_info.contest_name){
-  //         holdContestInfo.contest_info.time = value.time;
-  //       }
-  //     })
-  //   } 
-  //   catch (err) {
-  //     console.log(err);
-  //   }
-  // }
-
   const checkHoldContest = async () => {
     try {
+      console.log(holdContestInfo)
       const res = await getContests();
       console.log(res.data);
       if(res.status === 200){
@@ -81,6 +106,7 @@ export const HeldContest:React.FC<HeldContestProps> = ({allProblems}) => {
           }
         })
         console.log(isSameContest)
+        console.log(holdContestInfo)
         if(!isSameContest || holdContestInfo.problems.length === 0){
           if(!isSameContest)
             setIsContest(true);
@@ -93,9 +119,44 @@ export const HeldContest:React.FC<HeldContestProps> = ({allProblems}) => {
       console.log(err);           
     }
   }
+  const sortProblem = (problemProps: Problem[]): Problem[] => {
+    const returnProblem: Problem[] = new Array(problemProps.length);
+    console.log("before")
+    console.log(problemProps)
+    let seen: number[] = new Array(problemProps.length).fill(0);
+    console.log(returnProblem)
+    console.log(seen)
+    for (let i = 0; i < problemProps.length; i++) {
+      let ind: number = -1;
+      for (let j = 0; j < problemProps.length; j++){
+        if(ind === -1 && seen[j] === 0){
+          ind = j;
+        }        
+      }
+      for (let j = ind; j < problemProps.length; j++){
+        if(problemProps[j].difficulty < problemProps[ind].difficulty && seen[j] === 0){
+          ind = j;
+        }        
+      }
+      returnProblem[i] = problemProps[ind];
+      console.log(returnProblem)
+      console.log(seen)
+      console.log(ind)
+      seen[ind] = 1;
+    }
+    console.log("after")
+    console.log(returnProblem)
+    return returnProblem;
+  } 
+
+  useLayoutEffect(() => {
+    getAllProblems()
+  }, [])
+
   console.log("<HeldContest>")
   return (
     <div style={{margin: "20px 20px"}}>
+      {console.log("display <HeldContest>")}
       contest name
       <input 
         type="text"
@@ -111,7 +172,7 @@ export const HeldContest:React.FC<HeldContestProps> = ({allProblems}) => {
       />
       { isContest ? '存在しません' : ''}
       <DecideProblem 
-        holdContestInfo={ holdContestInfo } setHoldContestInfo={ setHoldContestInfo } 
+        holdContestInfo={ holdContestInfo } setHoldContestInfo={ setHoldContestInfo } allDiffProblems = { allDiffProblems }
         allProblems = { allProblems } />
       <ul className='problemIndex'>
         {

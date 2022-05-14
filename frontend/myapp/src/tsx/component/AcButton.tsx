@@ -9,7 +9,6 @@ interface AcButtonProps{
 }
 
 export const AcButton: React.FC<AcButtonProps> = ({ handleAC, index }) => {
-  console.log(index)
   return (
     <Button style={{
         height: "15px",

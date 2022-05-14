@@ -31,18 +31,26 @@ export const joiningUser = (contest_name: string, time: number) => {
 export const updateUserAC = (user: User, problem: string, ACDate: Date) => {
   return base.patch(`/contest_page/user/update`, {user, problem, ACDate})
 }
+export const userHistory = (contest_name: string,user_name: string) => {
+  return base.get(`/users/history/${contest_name}/${user_name}`)
+}
 // "/histries"
-export const holdContests = (data: HoldContestInfo) => {
+export const holdContests = async (data: HoldContestInfo) => {
   const addProblem: Problem = {contest_id: "null", difficulty: 0}
+  const pushProblem: Problem[] = []
   for (let i: number = data.problems.length; i < 10; i++) {
-    data.problems.push(addProblem);
+   pushProblem.push(addProblem);
   }
-  console.log(data);
-  return base.post("/history", data);
+  const new_data: HoldContestInfo = {
+    contest_info: data.contest_info,
+    problems: data.problems.concat(pushProblem)
+  } 
+  console.log(new_data);
+  return base.post("/history", new_data);
 }
 
-export const getContestInfo = (contest: Contest) =>{
-  return base.get(`/contest_page/${contest.contest_name}/${contest.time}`)
+export const getContestInfo = (contest_name: string, time: number) =>{
+  return base.get(`/contest_page/${contest_name}/${time}`)
 }
 
 export const getHistoryIndex = (contest_name: string) => {

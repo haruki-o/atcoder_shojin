@@ -1,4 +1,9 @@
 class UsersController < ApplicationController
+  def all
+    @user = User.where(contest_name: params[:contest_name], user_name: params[:user_name])
+    render json: @user
+  end
+  
   def index 
     @user = User.where(contest_name: params[:contest_name], time: params[:time])
     render json: @user
@@ -25,10 +30,12 @@ class UsersController < ApplicationController
       user_name: params["user"]["user_name"] 
     )
     puts params["problem"]
+    puts params["user"]["performance"]
+    puts "--------"
     # for i in User.column_names do
     #   if i === params["problem"]
     #     puts i
-    #     if @user.update(${i}: params["ACDate"])
+    #     if @user.update(${i}: params["ACDate"], performance: params["user"]["performance"])
     #       render json: @user
     #     else
     #       render json: @user.errors
@@ -37,70 +44,70 @@ class UsersController < ApplicationController
     # end
     if params["problem"] === "ProblemA"
       puts "problemA"
-      if @user.update(ProblemA: params["ACDate"])
+      if @user.update(ProblemA: params["ACDate"], performance: params["user"]["performance"])
         render json: @user
       else
         render json: @user.errors
       end
     end
     if params["problem"] === "ProblemB"
-      if @user.update(ProblemB: params["ACDate"])
+      if @user.update(ProblemB: params["ACDate"], performance: params["user"]["performance"])
         render json: @user
       else
         render json: @user.errors
       end
     end
     if params["problem"] === "ProblemC"
-      if @user.update(ProblemC: params["ACDate"])
+      if @user.update(ProblemC: params["ACDate"], performance: params["user"]["performance"])
         render json: @user
       else
         render json: @user.errors
       end
     end
     if params["problem"] === "ProblemD"
-      if @user.update(ProblemD: params["ACDate"])
+      if @user.update(ProblemD: params["ACDate"], performance: params["user"]["performance"])
         render json: @user
       else
         render json: @user.errors
       end
     end
     if params["problem"] === "ProblemE"
-      if @user.update(ProblemE: params["ACDate"])
+      if @user.update(ProblemE: params["ACDate"], performance: params["user"]["performance"])
         render json: @user
       else
         render json: @user.errors
       end
     end
     if params["problem"] === "ProblemF"
-      if @user.update(ProblemF: params["ACDate"])
+      if @user.update(ProblemF: params["ACDate"], performance: params["user"]["performance"])
         render json: @user
       else
         render json: @user.errors
       end
     end
     if params["problem"] === "ProblemG"
-      if @user.update(ProblemG: params["ACDate"])
+      if @user.update(ProblemG: params["ACDate"], performance: params["user"]["performance"])
         render json: @user
       else
         render json: @user.errors
       end
     end
     if params["problem"] === "ProblemH"
-      if @user.update(ProblemH: params["ACDate"])
+      if @user.update(ProblemH: params["ACDate"], performance: params["user"]["performance"])
         render json: @user
       else
         render json: @user.errors
       end
     end
     if params["problem"] === "ProblemI"
-      if @user.update(ProblemI: params["ACDate"])
+      if @user.update(ProblemI: params["ACDate"], performance: params["user"]["performance"])
         render json: @user
       else
         render json: @user.errors
       end
     end
     if params["problem"] === "ProblemJ"
-      if @user.update(ProblemJ: params["ACDate"])
+      if @user.update(ProblemJ: params["ACDate"], performance: params["user"]["performance"])
         render json: @user
       else
         render json: @user.errors
@@ -111,6 +118,6 @@ class UsersController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def user_min_params
-    params.require(:user).permit(:contest_name, :time, :user_name)
+    params.require(:user).permit(:contest_name, :time, :user_name, :performance)
   end
 end
