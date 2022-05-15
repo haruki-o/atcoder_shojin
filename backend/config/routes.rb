@@ -11,6 +11,7 @@ Rails.application.routes.draw do
     patch '/contest_page/user/update', to: 'users#update'
 
     get '/contest_page/:contest_name/:time', to: 'histories#index'
+    get '/history/all', to: 'histories#all'
     get '/history/:contest_name', to: 'histories#find'
     post '/history', to: 'histories#create'
 end

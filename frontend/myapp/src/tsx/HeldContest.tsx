@@ -155,11 +155,12 @@ export const HeldContest = () => {
 
   console.log("<HeldContest>")
   return (
-    <div style={{margin: "20px 20px"}}>
+    <div style={{margin: "20px"}}>
       {console.log("display <HeldContest>")}
       contest name
       <input 
         type="text"
+        style={{margin: "0 0 0 10px"}}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
           const { value }: { value : string } = e.target
           setHoldContestInfo({

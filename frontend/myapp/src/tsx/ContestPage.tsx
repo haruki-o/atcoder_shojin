@@ -151,8 +151,8 @@ export const ContestPage= () => {
   console.log(location.state)
   console.log("render <ContestPage>")
   return (
-    <div>
-      <h1>{location.state.contest_name}{('000' + String(location.state.time)).slice(-3)}</h1>
+    <div style={{margin: "20px"}}>
+      <h1>{location.state.contest_name}{('000' + String(location.state.time-1)).slice(-3)}</h1>
       <p>
         {`${location.state.start_date.getHours().toFixed().padStart(2, "0")}:${location.state.start_date.getMinutes().toFixed().padStart(2, "0")}`} ~ {`${location.state.end_date.getHours().toFixed().padStart(2, "0")}:${location.state.end_date.getMinutes().toFixed().padStart(2, "0")}`} ({(location.state.end_date.getTime()-location.state.start_date.getTime())/1000/60}分)
       </p>

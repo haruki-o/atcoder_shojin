@@ -56,3 +56,7 @@ export const getContestInfo = (contest_name: string, time: number) =>{
 export const getHistoryIndex = (contest_name: string) => {
   return base.get(`/history/${contest_name}`);
 }
+
+export const getAllHistory = () => {
+  return base.get(`/history/all`);
+}

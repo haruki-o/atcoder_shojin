@@ -5,11 +5,11 @@ export const Home = () => {
   return (
     <div>
       <ul style={{listStyle : 'none'}}>
-        <li>・トップページ</li>
-        <li><Link to="/held">- held</Link></li>
-        <li><Link to="/create">- create</Link></li>
-        <li><Link to="/index">- index</Link></li>
-        <li><Link to="/join">- join</Link></li>
+        <li style={{margin: "10px 0"}}>・トップページ</li>
+        <li><Link to="/held">・ held</Link></li>
+        <li style={{margin: "10px 0"}}><Link to="/create">・ create</Link></li>
+        <li><Link to="/index">・ index</Link></li>
+        <li style={{margin: "10px 0"}}><Link to="/join">・ join</Link></li>
       </ul>
     </div>
   )

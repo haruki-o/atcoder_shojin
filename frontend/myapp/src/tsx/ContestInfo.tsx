@@ -94,7 +94,7 @@ export const ContestInfo: React.FC<ContestInfoProps> = () => {
           <Button onClick={() => handleUserPerf()}>search</Button>
         </InputGroup>
       </Col>
-      <List style={{padding:"0 0 0 20px"}}>
+      {/* <List style={{padding:"0 0 0 20px"}}>
         {
           allHistory.map((value: History, key:number) => {
             return(key < 5 &&
@@ -102,16 +102,7 @@ export const ContestInfo: React.FC<ContestInfoProps> = () => {
             )
           })
         }
-      </List>
-      <List>
-        {
-          userRating.map((value: User, key: number) => {
-            return(key < 5 && 
-              <li>{value.performance}</li>
-            )
-          })
-        }
-      </List>
+      </List> */}
       {afterProcessData.date.length !== 0 &&
         <LinePlot afterProcessData = { afterProcessData } />
       }

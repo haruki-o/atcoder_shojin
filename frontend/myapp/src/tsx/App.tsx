@@ -23,7 +23,7 @@ const App: React.FC = () => {
   console.log("render <App>")
 
   return (
-    <div style={{margin: "10px"}}>
+    <div>
       <BrowserRouter>
         <NavigationBar />
         <Routes>

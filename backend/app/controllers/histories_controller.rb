@@ -36,7 +36,10 @@ class HistoriesController < ApplicationController
     end
   end
 
-
+  def all 
+    @contest = History.all
+    render json: @contest
+  end
   private
     # Only allow a list of trusted parameters through.
     def contest_params
