@@ -34,7 +34,7 @@ export const DecideProblem: React.FC<DecideProblemsProps> = ({holdContestInfo, s
   console.log("<DecideProblem>")
   console.log(holdContestInfo)
   return (
-    <div style={{marginTop: "20px"}}>
+    <div style={{margin: "15px 0"}}>
       {
         Diff.map((value: string, index: number) => {
           return (

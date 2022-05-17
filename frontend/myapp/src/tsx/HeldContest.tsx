@@ -11,39 +11,48 @@ import { getProblems } from "../api/apis";
 import { DecideProblem } from "./DecideProblem";
 import { DateForm } from './DateForm';
 import { DecideDate } from './DecideDate';
+import { ProblemDeleteButton } from './ProblemDeleteButton';
 
 
 export const HeldContest = () => {
-  const [ holdContestInfo, setHoldContestInfo] = useState<HoldContestInfo>({
-    contest_info: {contest_name: 'none'},
+  const [holdContestInfo, setHoldContestInfo] = useState<HoldContestInfo>({
+    contest_info: { contest_name: 'none' },
     problems: []
   })
-  const [ isContest, setIsContest ] = useState<boolean>(false)
-  const [ allProblems, setAllProblems ] = useState<Problem[]>([])
+  // const [isCheck, setIsCheck] = useState<{ [s: string]: Boolean }>({
+  //   'sameContest': true, 'duringDate': true
+  // })
+  const [isSameContest, setIsSameContest] = useState<Boolean>(true);
+  const [isDuringDate, setIsDuringDate] = useState<Boolean>(true);
+  const [isProblemNull, setIsProblemNumll] = useState<Boolean>(true);
+
+  const [allProblems, setAllProblems] = useState<Problem[]>([])
+  const [allContests, setAllContests] = useState<Contest[]>([])
   const downDiff: number[] = [0, 400, 800, 1200, 1600, 2000, 2400, 2800]
   const upDiff: number[] = [400, 800, 1200, 1600, 2000, 2400, 2800, 5000]
-  const [ allDiffProblems, setAllDiffProblems ] = useState<Problem[][]>(new Array(8));
+  const DiffColor: string[] = ["#808080","#804000","#008000","#00C0C0","#0000FF","#C0C000","#FF8000","#FF0000"]
+  const [allDiffProblems, setAllDiffProblems] = useState<Problem[][]>(new Array(8));
 
   const navigate = useNavigate();
-  
+
   const getAllProblems = async () => {
     try {
       const res: any = await getProblems()
       console.log(res);
-      if(res.status === 200){
+      if (res.status === 200) {
         console.log("get allProblem success!")
-        const pushAllProblems : Problem[] = []
+        const pushAllProblems: Problem[] = []
         const pushAllDiffProblems: Problem[][] = new Array(8);
-        for(let i = 0;i < 8;i++){
+        for (let i = 0; i < 8; i++) {
           pushAllDiffProblems[i] = new Array();
         }
-        for(const key of Object.keys(res.data)){
+        for (const key of Object.keys(res.data)) {
           const diff: number = res.data[key].diff
           const id: string = res.data[key].contestId
-          if(id == undefined || diff == undefined)continue;
-          const addProblem: Problem = {contest_id: id, difficulty: diff}
-          for(let i=0; i < 8; i++){
-            if(downDiff[i] <= diff && diff <= upDiff[i]){
+          if (id == undefined || diff == undefined) continue;
+          const addProblem: Problem = { contest_id: id, difficulty: diff }
+          for (let i = 0; i < 8; i++) {
+            if (downDiff[i] <= diff && diff <= upDiff[i]) {
               pushAllDiffProblems[i].push(addProblem)
             }
           }
@@ -57,13 +66,33 @@ export const HeldContest = () => {
       console.log(err)
     }
   }
+  const getAllContests = async () => {
+    console.log("call getAllcontestes()")
+    try {
+      const res: any = await getContests();
+      console.log(res);
+      const pushAllContests: Contest[] = []
+      if (res.status === 200) {
+        res.data.map((value: Contest, key: number) => {
+          pushAllContests.push(value);
+        })
+        console.log(pushAllContests)
+        setAllContests(pushAllContests);
+        console.log(allContests);
+      }
+    }
+    catch (err) {
+      console.log(err)
+    }
+    console.log("end getAllcontestes()")
+  }
   const handleHoldContest = async () => {
     console.log("call handleHoldContest")
     console.log(holdContestInfo.problems)
     try {
       const res1 = await updateContestTime(holdContestInfo.contest_info.contest_name);
       console.log(res1);
-      if(res1.status === 200){
+      if (res1.status === 200) {
         const sortedProblems: Problem[] = sortProblem(holdContestInfo.problems);
         // console.log(sortProblem(holdContestInfo.problems));
         holdContestInfo.contest_info.time = res1.data.time;
@@ -72,52 +101,66 @@ export const HeldContest = () => {
           problems: sortedProblems
         });
         console.log(res2)
-        if(res2.status === 201){
+        if (res2.status === 201) {
           navigate(
             `/contest_page/${holdContestInfo.contest_info.contest_name}/${holdContestInfo.contest_info.time}`,
-            {state: {
-              contest_name: holdContestInfo.contest_info.contest_name,
-              time: holdContestInfo.contest_info.time,
-              start_date: new Date(`${holdContestInfo.contest_info.startDate} ${holdContestInfo.contest_info.startHour}:${holdContestInfo.contest_info.startMinute}`),
-              end_date: new Date(`${holdContestInfo.contest_info.endDate} ${holdContestInfo.contest_info.endHour}:${holdContestInfo.contest_info.endMinute}`),
-              contest_problems: sortedProblems
-            }}
+            {
+              state: {
+                contest_name: holdContestInfo.contest_info.contest_name,
+                time: holdContestInfo.contest_info.time,
+                start_date: new Date(`${holdContestInfo.contest_info.startDate} ${holdContestInfo.contest_info.startHour}:${holdContestInfo.contest_info.startMinute}`),
+                end_date: new Date(`${holdContestInfo.contest_info.endDate} ${holdContestInfo.contest_info.endHour}:${holdContestInfo.contest_info.endMinute}`),
+                contest_problems: sortedProblems
+              }
+            }
           );
         }
       }
     }
     catch (err) {
-      console.log(err);           
+      console.log(err);
     }
   }
 
-  const checkHoldContest = async () => {
-    try {
-      console.log(holdContestInfo)
-      const res = await getContests();
-      console.log(res.data);
-      if(res.status === 200){
-        console.log("get contests all success!")
-        var isSameContest: boolean = false;
-        res.data.map((value: Contest) => {
-          if(value.contest_name === holdContestInfo.contest_info.contest_name){
-            console.log(`find same contest ${value.contest_name}`);
-            isSameContest = true;
-          }
-        })
-        console.log(isSameContest)
-        console.log(holdContestInfo)
-        if(!isSameContest || holdContestInfo.problems.length === 0){
-          if(!isSameContest)
-            setIsContest(true);
-          else 
-            setIsContest(false);
-        } else handleHoldContest();
+  const checkDuringDate = (): Boolean => {
+    var flag: Boolean = true;
+    const endSeconds: number = new Date(`${holdContestInfo.contest_info.endDate} ${holdContestInfo.contest_info.endHour}:${holdContestInfo.contest_info.endMinute}`).getTime() / 1000;
+    const startSeconds: number = new Date(`${holdContestInfo.contest_info.startDate} ${holdContestInfo.contest_info.startHour}:${holdContestInfo.contest_info.startMinute}`).getTime() / 1000;
+    const duringSeconds: number = endSeconds - startSeconds;
+    const nowSeconds: number = (new Date()).getTime() / 1000;
+    if (duringSeconds <= 0 && 60 * 60 * 3 < duringSeconds) flag = false;
+    if (startSeconds < nowSeconds) flag = false;
+    return flag;
+  }
+  const checkSameContest = (): Boolean => {
+    var flag: Boolean = false;
+    allContests.map((value: Contest) => {
+      if (value.contest_name === holdContestInfo.contest_info.contest_name) {
+        console.log(`find same contest ${value.contest_name}`);
+        flag = true;
       }
-    }
-    catch (err) {
-      console.log(err);           
-    }
+    })
+    return flag;
+  }
+  const checkProblemNull = (): Boolean => {
+    var flag: Boolean = holdContestInfo.problems.length !== 0;
+    return flag;
+  }
+  const checkHoldContest = () => {
+    var checkFlag: Boolean = true;
+    if (!checkSameContest()) {
+      checkFlag = false;
+      setIsSameContest(false);
+    } else setIsSameContest(true);
+    if (!checkDuringDate()) {
+      checkFlag = false;
+      setIsDuringDate(false);
+    } else setIsDuringDate(true);
+    if (!checkProblemNull()) {
+      checkFlag = false;
+      setIsProblemNumll(false);
+    } else setIsProblemNumll(true);
+    if (checkFlag) handleHoldContest();
   }
   const sortProblem = (problemProps: Problem[]): Problem[] => {
     const returnProblem: Problem[] = new Array(problemProps.length);
@@ -128,15 +171,15 @@ export const HeldContest = () => {
     console.log(seen)
     for (let i = 0; i < problemProps.length; i++) {
       let ind: number = -1;
-      for (let j = 0; j < problemProps.length; j++){
-        if(ind === -1 && seen[j] === 0){
+      for (let j = 0; j < problemProps.length; j++) {
+        if (ind === -1 && seen[j] === 0) {
           ind = j;
-        }        
+        }
       }
-      for (let j = ind; j < problemProps.length; j++){
-        if(problemProps[j].difficulty < problemProps[ind].difficulty && seen[j] === 0){
+      for (let j = ind; j < problemProps.length; j++) {
+        if (problemProps[j].difficulty < problemProps[ind].difficulty && seen[j] === 0) {
           ind = j;
-        }        
+        }
       }
       returnProblem[i] = problemProps[ind];
       console.log(returnProblem)
@@ -147,50 +190,80 @@ export const HeldContest = () => {
     console.log("after")
     console.log(returnProblem)
     return returnProblem;
-  } 
+  }
 
   useLayoutEffect(() => {
-    getAllProblems()
+    getAllProblems();
+    getAllContests();
   }, [])
 
   console.log("<HeldContest>")
   return (
-    <div style={{margin: "20px"}}>
+    <div style={{ margin: "20px" }}>
       {console.log("display <HeldContest>")}
       contest name
-      <input 
+      <input
         type="text"
-        style={{margin: "0 0 0 10px"}}
+        style={{ margin: "0 0 0 10px" }}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-          const { value }: { value : string } = e.target
+          const { value }: { value: string } = e.target
           setHoldContestInfo({
             ...holdContestInfo,
             contest_info: {
               ...holdContestInfo.contest_info,
-              contest_name: value},
+              contest_name: value
+            },
           })
         }}
       />
-      { isContest ? '存在しません' : ''}
-      <DecideProblem 
-        holdContestInfo={ holdContestInfo } setHoldContestInfo={ setHoldContestInfo } allDiffProblems = { allDiffProblems }
-        allProblems = { allProblems } />
-      <ul className='problemIndex'>
+      {!isSameContest && 'このコンテスト名は存在しません'}
+      <DecideProblem
+        holdContestInfo={holdContestInfo} setHoldContestInfo={setHoldContestInfo} allDiffProblems={allDiffProblems}
+        allProblems={allProblems} />
+      <ul>
         {
-          holdContestInfo.problems.map((problem: Problem, index: number) =>{
-            const problemUrl: string = `https://atcoder.jp/contests/${problem.contest_id.substr(0,problem.contest_id.length-2)}/tasks/${problem.contest_id}`;
+          holdContestInfo.problems.map((problem: Problem, index: number) => {
+            const problemUrl: string = `https://atcoder.jp/contests/${problem.contest_id.substr(0, problem.contest_id.length - 2)}/tasks/${problem.contest_id}`;
             return (
-              <li>{problem.contest_id}, {problem.difficulty}<a href={problemUrl} target="_blank">url</a></li>
-              
+              <li style={{paddingBottom: "5px"}}>
+                <a 
+                  href={problemUrl} target="_blank"
+                  style={{margin: "5px 0",color: "black"}}
+                >
+                  {problem.contest_id}
+                </a>
+                {
+                  DiffColor.map((value: string, key:number) => {
+                    if(downDiff[key] <= problem.difficulty && 
+                      problem.difficulty < upDiff[key]){
+                        return(
+                          <span
+                            style={{color: value, padding: "0 10px"}}
+                          >
+                            {problem.difficulty}
+                          </span>
+                        )
+                      }
+                  })
+                }
+                <ProblemDeleteButton 
+                  holdContestInfo = { holdContestInfo }
+                  setHoldContestInfo = { setHoldContestInfo }
+                  index = { index }
+                />
+              </li>
+
             )
           })
         }
       </ul>
-      <DecideDate 
-        holdContestInfo={ holdContestInfo } 
-        setHoldContestInfo={ setHoldContestInfo } />
-      <Button 
-        style={{marginTop: "20px"}}
+      {!isProblemNull && <p>問題を選んでください</p>}
+      <DecideDate
+        holdContestInfo={holdContestInfo}
+        setHoldContestInfo={setHoldContestInfo} />
+      {!isDuringDate && <p>3h以内にしてください</p>}
+      <Button
+        style={{ marginTop: "20px" }}
         onClick={() => checkHoldContest()}>held</Button>
     </div>
   )

@@ -80,7 +80,7 @@ export const ContestInfo: React.FC<ContestInfoProps> = () => {
   console.log("render <ContestInfo>")
   console.log(location.state)
   return (
-    <div>
+    <div style={{margin: "0 10px"}}>
       <Col style={{width: "350px"}}>
         <InputGroup style={{padding: "20px 0", height: "80px"}}>
           <span style={{padding: "10px 0"}}>username : </span> 
@@ -94,15 +94,6 @@ export const ContestInfo: React.FC<ContestInfoProps> = () => {
           <Button onClick={() => handleUserPerf()}>search</Button>
         </InputGroup>
       </Col>
-      {/* <List style={{padding:"0 0 0 20px"}}>
-        {
-          allHistory.map((value: History, key:number) => {
-            return(key < 5 &&
-              <li>{value.contest_name}{value.time.toFixed().padStart(3,"0")}</li>
-            )
-          })
-        }
-      </List> */}
       {afterProcessData.date.length !== 0 &&
         <LinePlot afterProcessData = { afterProcessData } />
       }

@@ -20,8 +20,11 @@ export const ContestIndex = () => {
   const [ allHistories, setAllHistories] = useState<History[]>([])
   const [ allObjectProblems, setAllObjectProblems ] = useState<{ [s: string]: number }>({})
   const [ contestName, setContestName ] = useState<string>("");
+  const [ isSearch, setIsSearch ] = useState<boolean>(false);
+  const [ allContestsInfo, setAllContestsInfo ] = useState<{[s: string]: boolean[] }>({});
 
   const getAllProblems = async () => {
+    console.log("call getAllProblems()")
     try {
       const res: any = await getProblems()
       console.log(res);
@@ -36,7 +39,7 @@ export const ContestIndex = () => {
           if(id == undefined || diff == undefined)continue;
           const addProblem: Problem = {contest_id: id, difficulty: diff}
           pushAllProblems.push(addProblem)
-          pushAllObjectProblems.id = diff
+          pushAllObjectProblems[id] = diff
         }
         setAllProblems(pushAllProblems);
         setAllObjectProblems(pushAllObjectProblems);
@@ -45,8 +48,12 @@ export const ContestIndex = () => {
     catch (err) {
       console.log(err)
     }
+    console.log(allProblems);
+    console.log(allObjectProblems);
+    console.log("end getAllProblems()")
   }
   const getAllContests = async () => {
+    console.log("call getAllcontestes()")
     try {
       const res: any = await getContests();
       console.log(res);
@@ -55,13 +62,58 @@ export const ContestIndex = () => {
         res.data.map((value: Contest, key: number) => {
           pushAllContests.push(value);
         })
-        setAllContests(pushAllContests)
+        console.log(pushAllContests)
+        setAllContests(pushAllContests);
         console.log(allContests);
       }
     }
     catch (err) {
       console.log(err)
     }
+    console.log("end getAllcontestes()")
+  }
+  const getAllHistories = async () => {
+    console.log("call getAllHistories()")
+    try {
+      const res: any = await getAllHistory();
+      console.log(res);
+      if(res.status === 200){
+        console.log(res.data);
+        const pushAllHistories: History[] = [];
+        const isPush: { [s: string]: number} = {};
+        const pushAllContestsInfo: {[s: string]: boolean[] } = {};
+        res.data.map((value: History, key: number) => {
+          pushAllContestsInfo[value.contest_name] = [false, false];
+          if(value.contest_name in isPush)isPush[value.contest_name]++;
+          else isPush[value.contest_name] = 1;
+        })
+        console.log(pushAllContestsInfo);
+        res.data.map((value: History, key: number) => {
+          if(isPush[value.contest_name] === 1){
+            pushAllHistories.push(value);
+          }
+          else isPush[value.contest_name]--;
+          const now: Date = new Date();
+          const sta_date: Date = new Date(value.start_date);
+          const en_date: Date = new Date(value.end_date);
+          sta_date.setHours(sta_date.getHours() - 9);
+          en_date.setHours(en_date.getHours() - 9);
+          if(sta_date < now && now < en_date){
+            pushAllContestsInfo[value.contest_name][0] = true;
+          }
+          if(now < sta_date){
+            pushAllContestsInfo[value.contest_name][1] = true;
+          }
+        })
+        console.log(allContestsInfo)
+        setAllHistories(pushAllHistories);
+        setAllContestsInfo(pushAllContestsInfo);
+      }
+    }
+    catch (err) {
+      console.log(err);
+    }
+    console.log("end getAllHistories()")
   }
   const sortProblem = (problemProps: Problem[]): Problem[] => {
     const returnProblem: Problem[] = new Array(problemProps.length);
@@ -159,40 +211,21 @@ export const ContestIndex = () => {
       console.log(err);
     }
   }
-  const getAllHistories = async () => {
-    console.log("call getAllHistories")
-    try {
-      const res: any = await getAllHistory();
-      console.log(res);
-      if(res.status === 200){
-        console.log(res.data);
-        const pushAllHistories: History[] = [];
-        allContests.map((valContest: Contest, key1: number) => {
-          var isPush: boolean = false;
-          res.data.map((valHistory: History, key2: number) => {
-            if(valContest.contest_name === valHistory.contest_name && !isPush){
-              pushAllHistories.push(valHistory);
-              isPush = true;
-            }
-          })
-        })
-        setAllHistories(pushAllHistories);
-        console.log(allHistories)
-      }
-    }
-    catch (err) {
-      console.log(err);
-    }
-  }
+  
   useEffect(() => {
-    getAllContests();
-    getAllHistories();
-    getA
+    const f = async () => {
+      await getAllProblems();
+      await getAllContests();
+      await getAllHistories();
+    }
+    f();
   }, [])
   console.log("render <ContestIndex>")
-  // console.log(allHistories)
-  console.log(allObjectProblems);
-  // console.log(allContests)
+  console.log(allProblems.length)
+  console.log(allHistories);
+  console.log(allContests);
+  console.log(allContestsInfo)
+
   return (
     <div style={{padding: "10px"}}>
       <Col style={{width: "300px"}}>
@@ -203,32 +236,12 @@ export const ContestIndex = () => {
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               const { value }: { value : string } = e.target
               setContestName(value)
+              if(isSearch === true)setIsSearch(false);
             }}
             style={{margin: "0 0 0 10px"}}/>
+          <Button onClick={() => setIsSearch(true)}>search</Button>
         </InputGroup>
       </Col>
-      {/* {
-        allContests.map((value: Contest, key: number) => {
-          return((contestName === "" || (contestName !== "" && contestName === value.contest_name)) && 
-            <div style={{padding: "10px 0"}}>
-              <span style = {{padding : "0 10px 0 0"}}>{value.contest_name}</span>
-              <Button 
-                onClick={() => {
-                  navigate(`/contest_info/${value.contest_name}`,
-                  {state: {contest_name: value.contest_name}})
-                }}>
-                  info
-              </Button>
-              <Button 
-                style={{margin: "10px"}}
-                onClick={() => handleContestPage(value.contest_name)}
-              >
-                join
-              </Button>
-            </div>
-          )
-        })
-      } */}
       <Table striped responsive style={{margin: "0", textAlign: "center"}}>
         <thead>
           <tr>
@@ -236,7 +249,7 @@ export const ContestIndex = () => {
             <th>contest</th>
             <th>perf</th>
             <th>join</th>
-            <th>recent duaring</th>
+            <th>recent during</th>
             <th>recent diff</th>
           </tr>
         </thead>
@@ -246,7 +259,16 @@ export const ContestIndex = () => {
             const sta_date: Date = new Date(value.start_date);
             const en_date: Date = new Date(value.end_date);
             const dua_time: number = en_date.getTime() - sta_date.getTime();
-            return(
+            var isDisplay: boolean = false;
+            if(value.contest_name in allContestsInfo){
+              if(allContestsInfo[value.contest_name][0] === true){
+                console.log(value.contest_name);
+                console.log(allContestsInfo[value.contest_name], allContestsInfo[value.contest_name][0])
+                isDisplay = true;
+              }
+            }
+            console.log(isDisplay)
+            return((!isSearch || (isSearch && (contestName === value.contest_name))) &&
               <tr>
                 <th scope="row">{key}</th>
                 <td>{value.contest_name}</td>
@@ -260,11 +282,13 @@ export const ContestIndex = () => {
                   </Button>
                 </td>
                 <td>
-                  <Button 
-                    onClick={() => handleContestPage(value.contest_name)}
-                  >
-                    join
-                  </Button>
+                  {isDisplay &&
+                    <Button 
+                      onClick={() => handleContestPage(value.contest_name)}
+                    >
+                      join
+                    </Button>
+                  }
                 </td>
                 <td>
                   {(dua_time - dua_time % 60) / 1000 / 60}分
@@ -272,14 +296,12 @@ export const ContestIndex = () => {
                 <td>
                   {
                     Object.entries(value).map((val: string[], key: number) => {
-                      console.log(val[0]);
                       if(val[0].indexOf("problem") === 0 && val[1] !== null){
                         const at_diff: number = allObjectProblems[val[1]]
                         for(let i = 0; i < 8; i++){
                           if(downDiff[i] <= at_diff && at_diff <= upDiff[i]){
                             return(
-                              // <span style={{color: `${DiffColor[i]}`}}>○</span>
-                              <span></span>
+                              <span style={{color: `${DiffColor[i]}`}}>●</span>
                             )
                           }
                         }

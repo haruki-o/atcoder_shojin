@@ -24,10 +24,10 @@ export const DecideDate: React.FC<DecideDateProps> = ({holdContestInfo, setHoldC
       contest_info:{
         ...holdContestInfo.contest_info,
         startDate: `${yyyy}-${mm}-${dd}`,
-        startHour: today.getHours(),
         startMinute: (today.getMinutes() - today.getMinutes() % 5 + 5) % 60,
+        startHour: (today.getMinutes() - today.getMinutes() % 5 + 5) % 60 === 0 ? today.getHours() + 1 : today.getHours(),
         endDate: mm == "23" ? `${yyyy}-${mm}-00` : `${yyyy}-${mm}-${dd}`,
-        endHour: (today.getHours() + 1) % 24,
+        endHour: ((today.getMinutes() - today.getMinutes() % 5 + 5) % 60 === 0 ? today.getHours() + 1 : today.getHours() + 1) % 24,
         endMinute: (today.getMinutes() - today.getMinutes() % 5 + 5) % 60
       },
       problems: prev.problems
