@@ -9,7 +9,6 @@ import { getContests, updateContestTime, holdContests } from "../api/contests";
 import { getProblems } from "../api/apis";
 
 import { DecideProblem } from "./DecideProblem";
-import { DateForm } from './DateForm';
 import { DecideDate } from './DecideDate';
 import { ProblemDeleteButton } from './ProblemDeleteButton';
 
@@ -19,9 +18,6 @@ export const HeldContest = () => {
     contest_info: { contest_name: 'none' },
     problems: []
   })
-  // const [isCheck, setIsCheck] = useState<{ [s: string]: Boolean }>({
-  //   'sameContest': true, 'duringDate': true
-  // })
   const [isSameContest, setIsSameContest] = useState<Boolean>(true);
   const [isDuringDate, setIsDuringDate] = useState<Boolean>(true);
   const [isProblemNull, setIsProblemNumll] = useState<Boolean>(true);

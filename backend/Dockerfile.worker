@@ -16,4 +16,4 @@ ENTRYPOINT ["entrypoint.sh"]
 # EXPOSE 8080
 ENV RAILS_ENV=production RACK_ENV=production
 
-CMD ["rails", "server", "-p", "8080", "-b", "0.0.0.0"]
+CMD ["rails", "server", "-p", "$PORT"]

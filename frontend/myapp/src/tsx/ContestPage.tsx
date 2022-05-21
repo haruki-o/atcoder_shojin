@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Table, Button, Col, Label, InputGroup, Input } from 'reactstrap';
+import { Table, Button, Col, InputGroup, Input } from 'reactstrap';
 
-import { Contest, Problem, HoldContestInfo, User } from '../interface/index';
+import { Contest, Problem, User } from '../interface/index';
 
-import { getContestInfo, joinUser, joiningUser, updateUserAC } from "../api/contests"
+import { joinUser, joiningUser, updateUserAC } from "../api/contests"
 
 import { AcButton } from "./component/AcButton"
 

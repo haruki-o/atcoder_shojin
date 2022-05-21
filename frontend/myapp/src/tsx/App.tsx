@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import '../css/App.css';
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
-import axios from "axios";
 
 import { Home } from "./Home"
 import { NavigationBar } from "./NavigationBar"
@@ -10,13 +9,6 @@ import { HeldContest } from './HeldContest';
 import { Create } from "./Create"
 import { ContestPage } from './ContestPage';
 import { ContestInfo } from './ContestInfo';
-
-import { Problem, Contest, HoldContestInfo } from "../interface/index"
-
-import { getProblems } from '../api/apis';
-import { getContests} from "../api/contests"
-
-import { isConstructorDeclaration } from 'typescript';
 
 
 const App: React.FC = () => {  

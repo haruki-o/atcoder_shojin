@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button } from 'reactstrap';
 
-import { Contest } from "../interface/index"
 import { Problem } from "../interface/index"
 import { HoldContestInfo } from '../interface/index';
 

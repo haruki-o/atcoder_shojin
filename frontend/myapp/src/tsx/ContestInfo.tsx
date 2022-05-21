@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react"
 import { useLocation, useNavigate } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { List, Table, Button, Col, Label, InputGroup, Input } from 'reactstrap';
+import { Button, Col, InputGroup, Input } from 'reactstrap';
 
-import { Contest, History, User, Graph } from "../interface/index"
+import { History, User, Graph } from "../interface/index"
 
 import { getHistoryIndex, userHistory } from "../api/contests"
-import { url } from "inspector";
 import { LinePlot } from "./LinePlot";
 
 interface ContestInfoProps {
