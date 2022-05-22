@@ -32,10 +32,10 @@ export interface HoldContestInfo {
 
 export interface User {
   contest_name: string
-  time: number 
-  user_name: string 
+  time: number
+  user_name: string
   performance: number
-  WA?: number 
+  WA?: number
   ProblemA?: Date
   ProblemB?: Date
   ProblemC?: Date

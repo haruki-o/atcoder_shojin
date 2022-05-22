@@ -1,12 +1,9 @@
-import axios from "axios"
-import { Contest } from "../interface/index"
-import { HoldContestInfo } from '../interface/index';
-
+import axios from 'axios'
 
 const base = axios.create({
-  baseURL: "http://localhost:8080"
+  baseURL: "https://atcoder-shojin-api.herokuapp.com/",
 })
 
 export const getProblems = () => {
-  return base.get("/apis")
+  return base.get('/apis')
 }

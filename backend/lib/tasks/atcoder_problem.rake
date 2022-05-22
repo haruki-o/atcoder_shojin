@@ -14,7 +14,7 @@ namespace :atcoder_problem do
     JSON.load(item.body).each {|key, value|
       if value["difficulty"] != nil then
         puts "contestId: #{key}, diff: #{value["difficulty"]}"
-        @contest = ProblemApi.create(
+        @contest = Api.create(
           contestId: key,
           diff: value["difficulty"]
         )
